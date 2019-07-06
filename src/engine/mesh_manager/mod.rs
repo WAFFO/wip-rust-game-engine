@@ -13,7 +13,7 @@ use self::mesh::MeshIndex;
 use self::mesh_exploder::Explodable;
 
 // type must impl Clone
-pub type UUID = String;
+pub type UUID = &'static str;
 
 pub struct MeshManager {
     updated: bool,

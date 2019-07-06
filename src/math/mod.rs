@@ -4,21 +4,23 @@ pub mod glm;
 
 type FSize = f32;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Default)]
 pub struct Vert3 ( pub(self) [FSize; 3] );
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Default)]
 pub struct Vert4 ( pub(self) [FSize; 4] );
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Default)]
 pub struct Mat3 ( pub(self) [FSize; 9] );
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Default)]
 pub struct Mat4 ( pub(self) [FSize; 16] );
 
 impl Vert3 {
     pub fn new(x: FSize, y: FSize, z: FSize) -> Vert3 { Vert3 ( [x, y, z] ) }
     pub fn zero() -> Vert3 { Vert3 ( [0.0, 0.0, 0.0] ) }
+    pub fn one()  -> Vert3 { Vert3 ( [1.0, 1.0, 1.0] ) }
+    pub fn all(f: FSize) -> Vert3 { Vert3 ( [f, f, f] ) }
     pub fn data(&self) -> [FSize;3] { self.0 }
     pub fn data_ref(&self) -> &[FSize;3] { &self.0 }
     pub fn data_ref_mut(&mut self) -> &mut [FSize;3] { &mut self.0 }
@@ -51,6 +53,8 @@ impl Vert3 {
 impl Vert4 {
     pub fn new(x: FSize, y: FSize, z: FSize, w: FSize) -> Vert4 { Vert4 ( [x, y, z, w] ) }
     pub fn zero() -> Vert4 { Vert4 ( [0.0, 0.0, 0.0, 0.0] ) }
+    pub fn one()  -> Vert4 { Vert4 ( [1.0, 1.0, 1.0, 1.0] ) }
+    pub fn all(f: FSize) -> Vert4 { Vert4 ( [f, f, f, f] ) }
     pub fn vert4(v: Vert3, f: FSize) -> Vert4 { Vert4 ( [v[0], v[1], v[2], f] ) }
     pub fn data(&self) -> [FSize;4] { self.0 }
     pub fn data_ref(&self) -> &[FSize;4] { &self.0 }
@@ -213,12 +217,29 @@ impl std::ops::IndexMut<(usize,usize)> for Mat4 {
     }
 }
 
+impl From<Vert3> for Vert4 {
+    fn from(f: Vert3) -> Self {
+        Vert4 ( [f[0], f[1], f[2], 0.0] )
+    }
+}
+
 impl From<Vert3> for Mat3 {
     fn from(f: Vert3) -> Self {
         Mat3 ( [
             f[0],  0.0,  0.0,
              0.0, f[1],  0.0,
              0.0,  0.0, f[2],
+        ] )
+    }
+}
+
+impl From<Mat3> for Mat4 {
+    fn from(f: Mat3) -> Self {
+        Mat4 ( [
+            f[0], f[1], f[2],  0.0,
+            f[3], f[4], f[5],  0.0,
+            f[6], f[7], f[8],  0.0,
+             0.0,  0.0,  0.0,  0.0,
         ] )
     }
 }

@@ -4,6 +4,7 @@ use specs::shred::{Resource};
 
 use crate::engine::Engine;
 use crate::engine::input::{KeyBoard, Mouse};
+use engine::mesh_manager::UUID;
 
 impl Engine {
     pub fn delta(&self) -> f32 {
@@ -25,6 +26,7 @@ impl Engine {
     pub fn run_system<'a, T: RunNow<'a>>(&'a mut self, system: &'a mut T) {
         system.run_now(&mut self.world.res)
     }
+
     pub fn get_mouse(&self) -> Mouse {
         self.mouse.clone()
     }
@@ -32,4 +34,7 @@ impl Engine {
         self.key_board.clone()
     }
 
+    pub fn load_mesh(&mut self, id: UUID) -> UUID {
+        self.mesh_manager.load(id)
+    }
 }
