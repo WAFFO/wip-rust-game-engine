@@ -2,7 +2,6 @@
 use crate::engine::Engine;
 use engine::input::{MouseButton, Mouse, KeyBoard};
 
-#[wasm_bindgen]
 pub trait Game {
     fn tick(&mut self, core: &mut Engine);
 

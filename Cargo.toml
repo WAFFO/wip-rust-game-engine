@@ -3,17 +3,14 @@ name = "goblin"
 version = "0.1.0"
 authors = ["team goblin"]
 
-[lib]
-crate-type = ["cdylib"]
-
 [dependencies]
-js-sys = "0.3.5"
-wasm-bindgen = "0.2.29"
-console_error_panic_hook = "0.1.5"
-specs = "0.14.1"
+js-sys = "0.3.24"
+wasm-bindgen = "0.2.47"
+console_error_panic_hook = "0.1.6"
+specs = "0.14.0"
 
 [dependencies.web-sys]
-version = "0.3.4"
+version = "0.3.24"
 features = [
   'console',
   'Document',

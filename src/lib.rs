@@ -20,6 +20,6 @@ pub mod javascript;
 pub mod math;
 
 // bring to the surface
-pub use application::Application;
+//pub use application::Application;
 pub use engine::Engine;
 pub use game::Game;

@@ -69,7 +69,7 @@ impl Engine {
         })
     }
 
-    pub(crate) fn tick(&mut self) {
+    pub fn tick(&mut self) {
         {
             // first tick delta time
             let mut _delta = self.world.write_resource::<DeltaTime>();
@@ -79,7 +79,7 @@ impl Engine {
         // do engine stuff here?
     }
 
-    pub(crate) fn render(&mut self) -> Result<(), JsValue> {
+    pub fn render(&mut self) -> Result<(), JsValue> {
         self.renderer.draw(&self.world, &mut self.mesh_manager)
     }
 }
