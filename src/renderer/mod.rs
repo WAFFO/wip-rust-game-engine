@@ -225,8 +225,11 @@ impl Renderer {
         glm::perspective( width/height, 75.0, 0.1, 200.0)
     }
 
+    //                          position, target
     fn get_view(world: &World) -> (Vert3, Vert3) {
+        let _transform_storage = world.read_storage::<components::Transform>();
         let _camera_storage = world.read_storage::<components::Camera>();
+        let _pc_storage = world.read_storage::<components::PlayerController>();
 
         let mut result = (
             Vert3::new(0.0, 0.0, 0.0),
@@ -234,9 +237,8 @@ impl Renderer {
         );
 
         // TODO, avoid using a loop? .get() .get_unchecked()
-        for camera in (&_camera_storage).join() {
-            result = (camera.target+camera.rotation,camera.target);
-            break;
+        for (transform, camera, _) in (&_transform_storage, &_camera_storage, &_pc_storage).join() {
+            result = (transform.translation+camera.rotation,transform.translation);
         }
 
         result

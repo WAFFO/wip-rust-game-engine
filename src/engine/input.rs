@@ -2,6 +2,14 @@ use engine::Engine;
 use javascript;
 use engine::input::MouseButton::{Left, Middle, Right, M4, M5};
 
+#[derive(Copy, Clone, PartialEq)]
+pub enum EventType {
+    Press,
+    Release,
+    Move,
+    Scroll,
+}
+
 #[derive(Copy, Clone, Default)]
 pub struct Mouse {
     left: bool,
@@ -31,9 +39,19 @@ impl Mouse {
             move_s: 0.0,
         }
     }
+    pub fn left(&self) -> bool { self.left }
+    pub fn right(&self) -> bool { self.right }
+    pub fn middle(&self) -> bool { self.middle }
+    pub fn m4(&self) -> bool { self.m4 }
+    pub fn m5(&self) -> bool { self.m5 }
+    pub fn x(&self) -> f32 { self.x }
+    pub fn y(&self) -> f32 { self.y }
+    pub fn move_x(&self) -> f32 { self.move_x }
+    pub fn move_y(&self) -> f32 { self.move_y }
+    pub fn move_s(&self) -> f32 { self.move_s }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 pub enum MouseButton {
     Left,
     Right,
@@ -56,6 +74,20 @@ impl KeyBoard {
         }
         else {
             self.board[key]
+        }
+    }
+}
+
+impl std::ops::Index<usize> for KeyBoard {
+    type Output = bool;
+
+    fn index(&self, index: usize) -> &bool {
+        if index > 255 {
+            javascript::log_1("ERROR: key_up: {}", &(index as i32).into());
+            &false
+        }
+        else {
+            &self.board[index]
         }
     }
 }

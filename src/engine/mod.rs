@@ -41,6 +41,7 @@ impl Engine {
         world.register::<Camera>();
         world.register::<Solid>();
         world.register::<Light>();
+        world.register::<PlayerController>();
 
         world.add_resource(DeltaTime(0.0));
 

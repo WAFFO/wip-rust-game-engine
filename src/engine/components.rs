@@ -58,7 +58,7 @@ impl Component for StaticMesh {
 
 pub struct Camera {
     pub rotation: Vert3,
-    pub target: Vert3,
+    // pub target: Vert3,
     pub pitch: f32,
     pub yaw: f32,
     pub pole_arm: f32,
@@ -87,7 +87,7 @@ impl Default for Camera {
     fn default() -> Camera {
         Camera {
             rotation: Vert3::new(0.0, 0.0, 0.0),
-            target: Vert3::new(0.0, 0.0, 0.0),
+            // target: Vert3::new(0.0, 0.0, 0.0),
             pitch: 0.0,
             yaw: 0.0,
             pole_arm: 0.1,
@@ -115,4 +115,11 @@ impl Default for Light {
             color: Vert4::new(1.0, 1.0, 1.0, 1.0),
         }
     }
+}
+
+#[derive(Default)]
+pub struct PlayerController;
+
+impl Component for PlayerController {
+    type Storage = VecStorage<Self>;
 }
