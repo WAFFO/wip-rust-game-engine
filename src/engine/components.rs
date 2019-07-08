@@ -7,7 +7,7 @@ use engine::mesh_manager::UUID;
 
 // components
 pub struct Transform {
-    pub translation: Vert3,
+    pub position: Vert3,
     pub rotation: Vert3,
     pub scale: Vert3,
 }
@@ -19,7 +19,7 @@ impl Component for Transform {
 impl Default for Transform {
     fn default() -> Transform {
         Transform {
-            translation: Vert3::new(0.0, 0.0, 0.0),
+            position: Vert3::new(0.0, 0.0, 0.0),
             rotation: Vert3::new(0.0, 0.0, 0.0),
             scale: Vert3::new(0.0, 0.0, 0.0),
         }
@@ -27,7 +27,7 @@ impl Default for Transform {
 }
 
 pub struct Velocity {
-    pub translation: Vert3,
+    pub position: Vert3,
     pub rotation: Vert3,
 }
 
@@ -38,7 +38,7 @@ impl Component for Velocity {
 impl Default for Velocity {
     fn default() -> Velocity {
         Velocity {
-            translation: Vert3::new(0.0, 0.0, 0.0),
+            position: Vert3::new(0.0, 0.0, 0.0),
             rotation: Vert3::new(0.0, 0.0, 0.0),
         }
     }
@@ -118,7 +118,9 @@ impl Default for Light {
 }
 
 #[derive(Default)]
-pub struct PlayerController;
+pub struct PlayerController {
+    pub
+};
 
 impl Component for PlayerController {
     type Storage = VecStorage<Self>;
