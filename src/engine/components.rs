@@ -118,9 +118,7 @@ impl Default for Light {
 }
 
 #[derive(Default)]
-pub struct PlayerController {
-    pub
-};
+pub struct PlayerController;
 
 impl Component for PlayerController {
     type Storage = VecStorage<Self>;

@@ -238,7 +238,7 @@ impl Renderer {
 
         // TODO, avoid using a loop? .get() .get_unchecked()
         for (transform, camera, _) in (&_transform_storage, &_camera_storage, &_pc_storage).join() {
-            result = (transform.translation+camera.rotation,transform.translation);
+            result = (transform.position+camera.rotation,transform.position);
         }
 
         result
@@ -249,7 +249,7 @@ impl Renderer {
         if let Some(mesh_index) = mesh_manager.get(&mesh.mesh_id) {
             Some((
                 mesh_index,
-                 glm::translate(transform.translation)
+                 glm::translate(transform.position)
                  * glm::rotate_x(transform.rotation[0])
                  * glm::rotate_y(transform.rotation[1])
                  * glm::rotate_z(transform.rotation[2])
@@ -268,7 +268,7 @@ impl Renderer {
         let mut list: Vec<(Vert3, Vert4)> = Vec::new();
 
         for (transform, light) in (&_transform_storage, &_light_storage).join() {
-            list.push((transform.translation, light.color));
+            list.push((transform.position, light.color));
         }
 
         list

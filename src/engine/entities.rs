@@ -5,7 +5,7 @@ use engine::components::*;
 use engine::mesh_manager::UUID;
 use math::{Vert3, Vert4};
 
-pub fn test_solid(world: &mut World, mesh: UUID, position: Vert3, scale: f32, position: Vert3) -> Entity {
+pub fn test_solid(world: &mut World, mesh: UUID, position: Vert3, scale: f32, rotation: Vert3) -> Entity {
     world.create_entity()
         .with(Transform  { position, rotation: Vert3::new(0.0, 0.0, 0.0), scale: Vert3::new(scale, scale, scale) })
         .with(Velocity   { position: Vert3::new(0.0, 0.0, 0.0), rotation })
