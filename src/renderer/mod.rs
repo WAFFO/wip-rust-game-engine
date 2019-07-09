@@ -241,6 +241,12 @@ impl Renderer {
             result = (transform.position+camera.rotation,transform.position);
         }
 
+//        crate::javascript::log_3("CAMERA POS: {}, {}, {}",
+//                                  &(result.0[0]).into(),
+//                                  &(result.0[1]).into(),
+//                                  &(result.0[2]).into(),
+//        );
+
         result
     }
 

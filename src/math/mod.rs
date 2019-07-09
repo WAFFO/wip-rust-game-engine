@@ -4,16 +4,16 @@ pub mod glm;
 
 type FSize = f32;
 
-#[derive(Debug, Copy, Clone, Default)]
+#[derive(Debug, Copy, Clone, Default, PartialEq)]
 pub struct Vert3 ( pub(self) [FSize; 3] );
 
-#[derive(Debug, Copy, Clone, Default)]
+#[derive(Debug, Copy, Clone, Default, PartialEq)]
 pub struct Vert4 ( pub(self) [FSize; 4] );
 
-#[derive(Debug, Copy, Clone, Default)]
+#[derive(Debug, Copy, Clone, Default, PartialEq)]
 pub struct Mat3 ( pub(self) [FSize; 9] );
 
-#[derive(Debug, Copy, Clone, Default)]
+#[derive(Debug, Copy, Clone, Default, PartialEq)]
 pub struct Mat4 ( pub(self) [FSize; 16] );
 
 impl Vert3 {
@@ -104,6 +104,7 @@ impl Mat3 {
             0.0, 0.0, 1.0,
         ] )
     }
+    pub fn mat3(mat: [FSize;9]) -> Mat3 { Mat3(mat) }
     pub fn data(&self) -> [FSize;9] { self.0 }
     pub fn data_ref(&self) -> &[FSize;9] { &self.0 }
     pub fn data_ref_mut(&mut self) -> &mut [FSize;9] { &mut self.0 }
@@ -119,7 +120,6 @@ impl Mat4 {
         ] )
     }
     pub fn zero() -> Mat4 { Mat4([0.0;16]) }
-    pub fn data(&self) -> [FSize;16] { self.0 }
     pub fn identity() -> Mat4 {
         Mat4 ( [
             1.0, 0.0, 0.0, 0.0,
@@ -128,6 +128,8 @@ impl Mat4 {
             0.0, 0.0, 0.0, 1.0,
         ] )
     }
+    pub fn mat4(mat: [FSize;16]) -> Mat4 { Mat4(mat) }
+    pub fn data(&self) -> [FSize;16] { self.0 }
     pub fn data_ref(&self) -> &[FSize;16] { &self.0 }
     pub fn data_ref_mut(&mut self) -> &mut [FSize;16] { &mut self.0 }
 }
@@ -406,9 +408,9 @@ impl std::ops::Mul<Mat3> for Mat3 {
         let m1 = &self;
         let m2 = &rhs;
         Mat3 ( [
-            m1[0]*m2[0]+m1[3]*m2[1]+m1[6]*m2[2], m1[0]*m2[3]+m1[3]*m2[4]+m1[6]*m2[5], m1[0]*m2[6]+m1[3]*m2[7]+m1[6]*m2[8],
-            m1[1]*m2[0]+m1[4]*m2[1]+m1[7]*m2[2], m1[1]*m2[3]+m1[4]*m2[4]+m1[7]*m2[5], m1[1]*m2[6]+m1[4]*m2[7]+m1[7]*m2[8],
-            m1[2]*m2[0]+m1[5]*m2[1]+m1[8]*m2[2], m1[2]*m2[3]+m1[5]*m2[4]+m1[8]*m2[5], m1[2]*m2[6]+m1[5]*m2[7]+m1[8]*m2[8],
+            m1[0]*m2[0]+m1[3]*m2[1]+m1[6]*m2[2], m1[1]*m2[0]+m1[4]*m2[1]+m1[7]*m2[2], m1[2]*m2[0]+m1[5]*m2[1]+m1[8]*m2[2],
+            m1[0]*m2[3]+m1[3]*m2[4]+m1[6]*m2[5], m1[1]*m2[3]+m1[4]*m2[4]+m1[7]*m2[5], m1[2]*m2[3]+m1[5]*m2[4]+m1[8]*m2[5],
+            m1[0]*m2[6]+m1[3]*m2[7]+m1[6]*m2[8], m1[1]*m2[6]+m1[4]*m2[7]+m1[7]*m2[8], m1[2]*m2[6]+m1[5]*m2[7]+m1[8]*m2[8],
         ] )
     }
 }
@@ -421,20 +423,23 @@ impl std::ops::Mul<Mat4> for Mat4 {
         let m2 = &rhs;
         Mat4 ( [
             m1[0]*m2[ 0]+m1[4]*m2[ 1]+m1[ 8]*m2[ 2]+m1[12]*m2[ 3],
-            m1[0]*m2[ 4]+m1[4]*m2[ 5]+m1[ 8]*m2[ 6]+m1[12]*m2[ 7],
-            m1[0]*m2[ 8]+m1[4]*m2[ 9]+m1[ 8]*m2[10]+m1[12]*m2[11],
-            m1[0]*m2[12]+m1[4]*m2[13]+m1[ 8]*m2[14]+m1[12]*m2[15],
             m1[1]*m2[ 0]+m1[5]*m2[ 1]+m1[ 9]*m2[ 2]+m1[13]*m2[ 3],
-            m1[1]*m2[ 4]+m1[5]*m2[ 5]+m1[ 9]*m2[ 6]+m1[13]*m2[ 7],
-            m1[1]*m2[ 8]+m1[5]*m2[ 9]+m1[ 9]*m2[10]+m1[13]*m2[11],
-            m1[1]*m2[12]+m1[5]*m2[13]+m1[ 9]*m2[14]+m1[13]*m2[15],
             m1[2]*m2[ 0]+m1[6]*m2[ 1]+m1[10]*m2[ 2]+m1[14]*m2[ 3],
-            m1[2]*m2[ 4]+m1[6]*m2[ 5]+m1[10]*m2[ 6]+m1[14]*m2[ 7],
-            m1[2]*m2[ 8]+m1[6]*m2[ 9]+m1[10]*m2[10]+m1[14]*m2[11],
-            m1[2]*m2[12]+m1[6]*m2[13]+m1[10]*m2[14]+m1[14]*m2[15],
             m1[3]*m2[ 0]+m1[7]*m2[ 1]+m1[11]*m2[ 2]+m1[15]*m2[ 3],
+
+            m1[0]*m2[ 4]+m1[4]*m2[ 5]+m1[ 8]*m2[ 6]+m1[12]*m2[ 7],
+            m1[1]*m2[ 4]+m1[5]*m2[ 5]+m1[ 9]*m2[ 6]+m1[13]*m2[ 7],
+            m1[2]*m2[ 4]+m1[6]*m2[ 5]+m1[10]*m2[ 6]+m1[14]*m2[ 7],
             m1[3]*m2[ 4]+m1[7]*m2[ 5]+m1[11]*m2[ 6]+m1[15]*m2[ 7],
+
+            m1[0]*m2[ 8]+m1[4]*m2[ 9]+m1[ 8]*m2[10]+m1[12]*m2[11],
+            m1[1]*m2[ 8]+m1[5]*m2[ 9]+m1[ 9]*m2[10]+m1[13]*m2[11],
+            m1[2]*m2[ 8]+m1[6]*m2[ 9]+m1[10]*m2[10]+m1[14]*m2[11],
             m1[3]*m2[ 8]+m1[7]*m2[ 9]+m1[11]*m2[10]+m1[15]*m2[11],
+
+            m1[0]*m2[12]+m1[4]*m2[13]+m1[ 8]*m2[14]+m1[12]*m2[15],
+            m1[1]*m2[12]+m1[5]*m2[13]+m1[ 9]*m2[14]+m1[13]*m2[15],
+            m1[2]*m2[12]+m1[6]*m2[13]+m1[10]*m2[14]+m1[14]*m2[15],
             m1[3]*m2[12]+m1[7]*m2[13]+m1[11]*m2[14]+m1[15]*m2[15],
         ] )
     }

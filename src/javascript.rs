@@ -24,3 +24,11 @@ pub fn log(s: &str) {
 pub fn log_1(s: &str, a: &JsValue) {
     console::log_2(&s.into(),&a);
 }
+
+pub fn log_2(s: &str, a: &JsValue, b: &JsValue) {
+    console::log_3(&s.into(),&a,&b);
+}
+
+pub fn log_3(s: &str, a: &JsValue, b: &JsValue, c: &JsValue) {
+    console::log_4(&s.into(),&a,&b,&c);
+}
