@@ -78,6 +78,12 @@ impl KeyBoard {
     }
 }
 
+impl Default for KeyBoard {
+    fn default() -> KeyBoard {
+        KeyBoard { board: [false;256] }
+    }
+}
+
 impl std::ops::Index<usize> for KeyBoard {
     type Output = bool;
 
@@ -94,13 +100,14 @@ impl std::ops::Index<usize> for KeyBoard {
 
 impl Engine {
     pub fn js_mouse_click(&mut self, button: u32, buttons: u32, x: f32, y: f32) -> (MouseButton, Mouse) {
-        self.mouse.left = (buttons & 1) > 0;
-        self.mouse.right = (buttons & 2) > 0;
-        self.mouse.middle = (buttons & 4) > 0;
-        self.mouse.m4 = (buttons & 8) > 0;
-        self.mouse.m5 = (buttons & 16) > 0;
-        self.mouse.x = x;
-        self.mouse.y = y;
+        let mut mouse = self.world.write_resource::<Mouse>();
+        mouse.left = (buttons & 1) > 0;
+        mouse.right = (buttons & 2) > 0;
+        mouse.middle = (buttons & 4) > 0;
+        mouse.m4 = (buttons & 8) > 0;
+        mouse.m5 = (buttons & 16) > 0;
+        mouse.x = x;
+        mouse.y = y;
 
         let current = match button {
             1 => Middle,
@@ -111,17 +118,18 @@ impl Engine {
 
         };
 
-        (current, self.mouse.clone())
+        (current, mouse.clone())
     }
 
     pub fn js_mouse_press(&mut self, button: u32, buttons: u32, x: f32, y: f32) -> (MouseButton, Mouse) {
-        self.mouse.left = (buttons & 1) > 0;
-        self.mouse.right = (buttons & 2) > 0;
-        self.mouse.middle = (buttons & 4) > 0;
-        self.mouse.m4 = (buttons & 8) > 0;
-        self.mouse.m5 = (buttons & 16) > 0;
-        self.mouse.x = x;
-        self.mouse.y = y;
+        let mut mouse = self.world.write_resource::<Mouse>();
+        mouse.left = (buttons & 1) > 0;
+        mouse.right = (buttons & 2) > 0;
+        mouse.middle = (buttons & 4) > 0;
+        mouse.m4 = (buttons & 8) > 0;
+        mouse.m5 = (buttons & 16) > 0;
+        mouse.x = x;
+        mouse.y = y;
 
         let current = match button {
             1 => Middle,
@@ -132,17 +140,18 @@ impl Engine {
 
         };
 
-        (current, self.mouse.clone())
+        (current, mouse.clone())
     }
 
     pub fn js_mouse_release(&mut self, button: u32, buttons: u32, x: f32, y: f32) -> (MouseButton, Mouse) {
-        self.mouse.left = (buttons & 1) > 0;
-        self.mouse.right = (buttons & 2) > 0;
-        self.mouse.middle = (buttons & 4) > 0;
-        self.mouse.m4 = (buttons & 8) > 0;
-        self.mouse.m5 = (buttons & 16) > 0;
-        self.mouse.x = x;
-        self.mouse.y = y;
+        let mut mouse = self.world.write_resource::<Mouse>();
+        mouse.left = (buttons & 1) > 0;
+        mouse.right = (buttons & 2) > 0;
+        mouse.middle = (buttons & 4) > 0;
+        mouse.m4 = (buttons & 8) > 0;
+        mouse.m5 = (buttons & 16) > 0;
+        mouse.x = x;
+        mouse.y = y;
 
         let current = match button {
             1 => Middle,
@@ -153,46 +162,50 @@ impl Engine {
 
         };
 
-        (current, self.mouse.clone())
+        (current, mouse.clone())
     }
 
     pub fn js_mouse_move(&mut self, x: f32, y: f32, move_x: f32, move_y: f32) -> Mouse {
-        self.mouse.x = x;
-        self.mouse.y = y;
-        self.mouse.move_x = move_x;
-        self.mouse.move_y = move_y;
+        let mut mouse = self.world.write_resource::<Mouse>();
+        mouse.x = x;
+        mouse.y = y;
+        mouse.move_x = move_x;
+        mouse.move_y = move_y;
 
-        self.mouse.clone()
+        mouse.clone()
     }
 
     pub fn js_mouse_scroll(&mut self, s: f32) -> Mouse {
-        self.mouse.move_s = s; // maybe: s/s.abs();
+        let mut mouse = self.world.write_resource::<Mouse>();
+        mouse.move_s = s; // maybe: s/s.abs();
 
-        self.mouse.clone()
+        mouse.clone()
     }
 
     pub fn js_key_down(&mut self, key: usize) -> KeyBoard {
+        let mut key_board = self.world.write_resource::<KeyBoard>();
         // probably clean engine.input here
         if key > 255 {
             javascript::log_1("ERROR: key_down: {}", &(key as i32).into());
         }
         else {
-            self.key_board.board[key] = true;
+            key_board.board[key] = true;
         }
 
-        self.key_board.clone()
+        key_board.clone()
     }
 
     pub fn js_key_up(&mut self, key: usize) -> KeyBoard {
+        let mut key_board = self.world.write_resource::<KeyBoard>();
         // probably clean engine.input here
         if key > 255 {
             javascript::log_1("ERROR: key_up: {}", &(key as i32).into());
         }
         else {
-            self.key_board.board[key] = false;
+            key_board.board[key] = false;
         }
 
-        self.key_board.clone()
+        key_board.clone()
     }
 
 

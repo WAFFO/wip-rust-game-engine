@@ -37,10 +37,10 @@ impl Engine {
     }
 
     pub fn get_mouse(&self) -> Mouse {
-        self.mouse.clone()
+        self.world.read_resource::<Mouse>().clone()
     }
     pub fn get_key_board(&self) -> KeyBoard {
-        self.key_board.clone()
+        self.world.read_resource::<KeyBoard>().clone()
     }
 
     pub fn load_mesh(&mut self, id: UUID) -> UUID {

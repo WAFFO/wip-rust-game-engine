@@ -26,8 +26,6 @@ pub struct Engine {
     renderer: Renderer,
     timer: Timer,
     mesh_manager: MeshManager,
-    mouse: Mouse,
-    key_board: KeyBoard,
 }
 
 impl Engine {
@@ -44,6 +42,8 @@ impl Engine {
         world.register::<PlayerController>();
 
         world.add_resource(DeltaTime(0.0));
+        world.add_resource(Mouse::new());
+        world.add_resource(KeyBoard::new());
 
         world.maintain();
 
@@ -55,18 +55,12 @@ impl Engine {
 
         let mesh_manager = MeshManager::new();
 
-        let mouse = Mouse::new();
-
-        let key_board = KeyBoard::new();
-
         Ok(Engine {
             world,
             //entities,
             renderer,
             timer,
             mesh_manager,
-            mouse,
-            key_board,
         })
     }
 
