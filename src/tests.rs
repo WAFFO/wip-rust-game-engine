@@ -1,6 +1,6 @@
 use engine::mesh_manager::MeshManager;
 use engine::mesh_manager::mesh::*;
-use math::Mat4;
+use math::{Mat4, Vert4};
 
 
 #[test]
@@ -112,6 +112,7 @@ fn test_math(){
         0.0, 2.0, 1.0, 0.0,
         2.0, 0.0, 0.0, 1.0,
     ]);
+    let v = Vert4::new(2.0, 3.0, 1.0, 3.0);
     let r1 = Mat4::mat4([
         5.0, 10.0, 15.0, 0.0,
         0.0, 6.0, 0.0, 0.0,
@@ -124,7 +125,9 @@ fn test_math(){
         1.0, 14.0, 9.0, 0.0,
         15.0, 20.0, 30.0, 1.0,
     ]);
+    let r3 = Vert4::new(17.0, 10.0, 9.0, 3.0);
 
     assert_eq!(a*b,r1);
     assert_eq!(a*b*c,r2);
+    assert_eq!(a*v, r3);
 }

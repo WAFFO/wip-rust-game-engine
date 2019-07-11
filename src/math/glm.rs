@@ -16,9 +16,9 @@ pub fn perspective(aspect: FSize, fov: FSize, near: FSize, far: FSize) -> Mat4 {
 
     m[0] =   w;
     m[5] =   h;
-    m[10] =    q;
+    m[10] =  q;
     m[11] = -1.0;
-    m[14] =  qn;
+    m[14] = qn;
 
     m
 }

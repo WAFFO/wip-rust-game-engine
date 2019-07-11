@@ -63,6 +63,7 @@ impl Vert4 {
     pub fn y(&self) -> FSize { self[1] }
     pub fn z(&self) -> FSize { self[2] }
     pub fn w(&self) -> FSize { self[3] }
+    pub fn xyz(&self) -> Vert3 { Vert3([self[0], self[1], self[2]]) }
     pub fn dot(&self, other: &Vert4) -> FSize {
         self[0] * other[0] + self[1] * other[1] + self[2] * other[2] + self[3] * other[3]
     }
@@ -442,5 +443,30 @@ impl std::ops::Mul<Mat4> for Mat4 {
             m1[2]*m2[12]+m1[6]*m2[13]+m1[10]*m2[14]+m1[14]*m2[15],
             m1[3]*m2[12]+m1[7]*m2[13]+m1[11]*m2[14]+m1[15]*m2[15],
         ] )
+    }
+}
+
+impl std::ops::Mul<Vert3> for Mat3 {
+    type Output = Vert3;
+
+    fn mul(self, rhs: Vert3) -> Vert3 {
+        Vert3([
+            rhs[0]*self[0] + rhs[1]*self[3] + rhs[2]*self[6],
+            rhs[0]*self[1] + rhs[1]*self[4] + rhs[2]*self[7],
+            rhs[0]*self[2] + rhs[1]*self[5] + rhs[2]*self[8],
+        ])
+    }
+}
+
+impl std::ops::Mul<Vert4> for Mat4 {
+    type Output = Vert4;
+
+    fn mul(self, rhs: Vert4) -> Vert4 {
+        Vert4([
+            rhs[0]*self[0] + rhs[1]*self[4] + rhs[2]*self[ 8] + rhs[3]*self[12],
+            rhs[0]*self[1] + rhs[1]*self[5] + rhs[2]*self[ 9] + rhs[3]*self[13],
+            rhs[0]*self[2] + rhs[1]*self[6] + rhs[2]*self[10] + rhs[3]*self[14],
+            rhs[0]*self[3] + rhs[1]*self[7] + rhs[2]*self[11] + rhs[3]*self[15],
+        ])
     }
 }
