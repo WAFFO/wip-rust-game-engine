@@ -1,5 +1,18 @@
 
-use math::{FSize, Vert3, Vert4, Mat4};
+pub mod vec3;
+pub mod vec4;
+pub mod mat3;
+pub mod mat4;
+pub mod quat;
+
+
+type FSize = f32;
+
+pub use self::vec3::Vec3;
+pub use self::vec4::Vec4;
+pub use self::mat3::Mat3;
+pub use self::mat4::Mat4;
+
 
 pub fn perspective(aspect: FSize, fov: FSize, near: FSize, far: FSize) -> Mat4 {
     let xy_max = near * fov.to_radians();
@@ -7,7 +20,7 @@ pub fn perspective(aspect: FSize, fov: FSize, near: FSize, far: FSize) -> Mat4 {
     let depth = far - near;
     let q = -(far + near) / depth;
     let qn = -2.0 * (far * near) / depth;
-    
+
     let w = 2.0 * near / xy_max;
     let w = w / aspect;
     let h = 2.0 * near / xy_max;
@@ -23,24 +36,24 @@ pub fn perspective(aspect: FSize, fov: FSize, near: FSize, far: FSize) -> Mat4 {
     m
 }
 
-pub fn look_at(pos: Vert3, target: Vert3, up: Vert3) -> Mat4 {
-    let zaxis: Vert3 = (pos - target).normalize();
-    let xaxis: Vert3 = up.cross(&target).normalize();
-    let yaxis: Vert3 = zaxis.cross(&xaxis).normalize();
+pub fn look_at(pos: Vec3, target: Vec3, up: Vec3) -> Mat4 {
+    let zaxis: Vec3 = (pos - target).normalize();
+    let xaxis: Vec3 = up.cross(&target).normalize();
+    let yaxis: Vec3 = zaxis.cross(&xaxis).normalize();
 
     Mat4::new(
-        Vert4::new(xaxis[0], yaxis[0], zaxis[0], 0.0),
-        Vert4::new(yaxis[1], yaxis[1], zaxis[1], 0.0),
-        Vert4::new(zaxis[2], yaxis[2], zaxis[2], 0.0),
-        Vert4::new(xaxis.dot(&pos) * -1.0, yaxis.dot(&pos) * -1.0, zaxis.dot(&pos) * -1.0, 1.0),
+        Vec4::new(xaxis[0], yaxis[0], zaxis[0], 0.0),
+        Vec4::new(yaxis[1], yaxis[1], zaxis[1], 0.0),
+        Vec4::new(zaxis[2], yaxis[2], zaxis[2], 0.0),
+        Vec4::new(xaxis.dot(&pos) * -1.0, yaxis.dot(&pos) * -1.0, zaxis.dot(&pos) * -1.0, 1.0),
     )
 }
 
-pub fn translate(t: Vert3) -> Mat4 {
+pub fn translate(t: Vec3) -> Mat4 {
     Mat4([
-         1.0,  0.0,  0.0, 0.0,
-         0.0,  1.0,  0.0, 0.0,
-         0.0,  0.0,  1.0, 0.0,
+        1.0,  0.0,  0.0, 0.0,
+        0.0,  1.0,  0.0, 0.0,
+        0.0,  0.0,  1.0, 0.0,
         t[0], t[1], t[2], 1.0,
     ])
 }
@@ -72,11 +85,11 @@ pub fn rotate_z(f: FSize) -> Mat4 {
     ])
 }
 
-pub fn scale(s: Vert3) -> Mat4 {
+pub fn scale(s: Vec3) -> Mat4 {
     Mat4([
         s[0],  0.0,  0.0, 0.0,
-         0.0, s[1],  0.0, 0.0,
-         0.0,  0.0, s[2], 0.0,
-         0.0,  0.0,  0.0, 1.0,
+        0.0, s[1],  0.0, 0.0,
+        0.0,  0.0, s[2], 0.0,
+        0.0,  0.0,  0.0, 1.0,
     ])
 }

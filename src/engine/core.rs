@@ -1,4 +1,4 @@
-use specs::{Component, EntityBuilder, Entity, RunNow, Builder};
+use specs::{Component, EntityBuilder, RunNow};
 use specs::shred::{Resource};
 
 use crate::engine::Engine;

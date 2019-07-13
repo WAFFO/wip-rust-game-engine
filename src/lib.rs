@@ -17,7 +17,7 @@ pub mod game;
 pub mod renderer;
 pub mod timer;
 pub mod javascript;
-pub mod math;
+pub mod glm;
 
 // bring to the surface
 //pub use application::Application;

@@ -1,15 +1,15 @@
 
 use specs::{Component, VecStorage};
-use math::{Vert3, Vert4};
+use glm::{Vec3, Vec4};
 
 use engine::mesh_manager::UUID;
 
 
 // components
 pub struct Transform {
-    pub position: Vert3,
-    pub rotation: Vert3,
-    pub scale: Vert3,
+    pub position: Vec3,
+    pub rotation: Vec3,
+    pub scale: Vec3,
 }
 
 impl Component for Transform {
@@ -19,16 +19,16 @@ impl Component for Transform {
 impl Default for Transform {
     fn default() -> Transform {
         Transform {
-            position: Vert3::new(0.0, 0.0, 0.0),
-            rotation: Vert3::new(0.0, 0.0, 0.0),
-            scale: Vert3::new(0.0, 0.0, 0.0),
+            position: Vec3::new(0.0, 0.0, 0.0),
+            rotation: Vec3::new(0.0, 0.0, 0.0),
+            scale: Vec3::new(0.0, 0.0, 0.0),
         }
     }
 }
 
 pub struct Velocity {
-    pub position: Vert3,
-    pub rotation: Vert3,
+    pub position: Vec3,
+    pub rotation: Vec3,
 }
 
 impl Component for Velocity {
@@ -38,8 +38,8 @@ impl Component for Velocity {
 impl Default for Velocity {
     fn default() -> Velocity {
         Velocity {
-            position: Vert3::new(0.0, 0.0, 0.0),
-            rotation: Vert3::new(0.0, 0.0, 0.0),
+            position: Vec3::new(0.0, 0.0, 0.0),
+            rotation: Vec3::new(0.0, 0.0, 0.0),
         }
     }
 }
@@ -57,8 +57,8 @@ impl Component for StaticMesh {
 
 
 pub struct Camera {
-    pub rotation: Vert3,
-    // pub target: Vert3,
+    pub rotation: Vec3,
+    // pub target: Vec3,
     pub pitch: f32,
     pub yaw: f32,
     pub pole_arm: f32,
@@ -77,6 +77,12 @@ impl Camera {
         self.rotation[1] = self.pitch.sin() * self.pole_arm;
         self.rotation[2] = self.pitch.cos() * self.yaw.cos() * self.pole_arm;
     }
+    pub fn forward(&self) -> Vec3 {
+        self.rotation.normalize()
+    }
+    pub fn right(&self) -> Vec3 {
+        self.rotation.cross(&Vec3::new(0.0, 1.0, 0.0)).normalize()
+    }
 }
 
 impl Component for Camera {
@@ -86,8 +92,8 @@ impl Component for Camera {
 impl Default for Camera {
     fn default() -> Camera {
         Camera {
-            rotation: Vert3::new(0.0, 0.0, 0.0),
-            // target: Vert3::new(0.0, 0.0, 0.0),
+            rotation: Vec3::new(0.0, 0.0, 0.0),
+            // target: Vec3::new(0.0, 0.0, 0.0),
             pitch: 0.0,
             yaw: 0.0,
             pole_arm: 0.1,
@@ -104,7 +110,7 @@ impl Component for Solid {
 }
 
 pub struct Light{
-    pub color: Vert4,
+    pub color: Vec4,
 }
 impl Component for Light {
     type Storage = VecStorage<Self>;
@@ -112,7 +118,7 @@ impl Component for Light {
 impl Default for Light {
     fn default() -> Light {
         Light {
-            color: Vert4::new(1.0, 1.0, 1.0, 1.0),
+            color: Vec4::new(1.0, 1.0, 1.0, 1.0),
         }
     }
 }

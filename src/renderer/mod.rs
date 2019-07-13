@@ -1,7 +1,7 @@
 use js_sys::WebAssembly;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
-use web_sys::{HtmlCanvasElement, WebGlProgram, WebGlBuffer, WebGl2RenderingContext, WebGlShader, WebGlUniformLocation, WebGlVertexArrayObject};
+use web_sys::{HtmlCanvasElement, WebGlBuffer, WebGl2RenderingContext, WebGlVertexArrayObject};
 use specs::{World, Join};
 //use glm;
 
@@ -11,8 +11,8 @@ use self::shader::Shader;
 use engine::components;
 use engine::components::{Transform, StaticMesh, Solid, Light};
 use engine::mesh_manager::{MeshManager, mesh::MeshIndex};
-use math::{Vert3, Vert4, Mat4};
-use math::glm;
+use glm::{Vec3, Vec4, Mat4};
+use glm;
 use javascript::get_canvas;
 
 pub struct Renderer {
@@ -226,14 +226,14 @@ impl Renderer {
     }
 
     //                          position, target
-    fn get_view(world: &World) -> (Vert3, Vert3) {
+    fn get_view(world: &World) -> (Vec3, Vec3) {
         let _transform_storage = world.read_storage::<components::Transform>();
         let _camera_storage = world.read_storage::<components::Camera>();
         let _pc_storage = world.read_storage::<components::PlayerController>();
 
         let mut result = (
-            Vert3::new(0.0, 0.0, 0.0),
-            Vert3::new(0.0, 0.0, 0.0),
+            Vec3::new(0.0, 0.0, 0.0),
+            Vec3::new(0.0, 0.0, 0.0),
         );
 
         // TODO, avoid using a loop? .get() .get_unchecked()
@@ -267,11 +267,11 @@ impl Renderer {
         }
     }
 
-    fn get_lights(world: &World) -> Vec<(Vert3, Vert4)> {
+    fn get_lights(world: &World) -> Vec<(Vec3, Vec4)> {
         let _transform_storage = world.read_storage::<Transform>();
         let _light_storage = world.read_storage::<Light>();
 
-        let mut list: Vec<(Vert3, Vert4)> = Vec::new();
+        let mut list: Vec<(Vec3, Vec4)> = Vec::new();
 
         for (transform, light) in (&_transform_storage, &_light_storage).join() {
             list.push((transform.position, light.color));
