@@ -16,10 +16,10 @@ impl Vec4 {
     pub fn data(&self) -> [FSize;4] { self.0 }
     pub fn data_ref(&self) -> &[FSize;4] { &self.0 }
     pub fn data_ref_mut(&mut self) -> &mut [FSize;4] { &mut self.0 }
-    pub fn x(&self) -> FSize { self[0] }
-    pub fn y(&self) -> FSize { self[1] }
-    pub fn z(&self) -> FSize { self[2] }
-    pub fn w(&self) -> FSize { self[3] }
+    pub fn x(&self) -> FSize { self.0[0] }
+    pub fn y(&self) -> FSize { self.0[1] }
+    pub fn z(&self) -> FSize { self.0[2] }
+    pub fn w(&self) -> FSize { self.0[3] }
     pub fn xyz(&self) -> Vec3 { Vec3([self[0], self[1], self[2]]) }
     pub fn dot(&self, other: &Vec4) -> FSize {
         self[0] * other[0] + self[1] * other[1] + self[2] * other[2] + self[3] * other[3]

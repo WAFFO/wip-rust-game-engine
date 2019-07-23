@@ -13,9 +13,9 @@ impl Vec3 {
     pub fn data(&self) -> [FSize;3] { self.0 }
     pub fn data_ref(&self) -> &[FSize;3] { &self.0 }
     pub fn data_ref_mut(&mut self) -> &mut [FSize;3] { &mut self.0 }
-    pub fn x(&self) -> FSize { self[0] }
-    pub fn y(&self) -> FSize { self[1] }
-    pub fn z(&self) -> FSize { self[2] }
+    pub fn x(&self) -> FSize { self.0[0] }
+    pub fn y(&self) -> FSize { self.0[1] }
+    pub fn z(&self) -> FSize { self.0[2] }
     pub fn dot(&self, other: &Vec3) -> FSize {
         self[0] * other[0] + self[1] * other[1] + self[2] * other[2]
     }
