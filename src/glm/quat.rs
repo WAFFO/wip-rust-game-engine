@@ -45,6 +45,14 @@ impl Quat {
              self.w(), // w
         ] )
     }
+    pub fn inverse(&self) -> Quat {
+        let inv_norm = 1.0 / (
+            self.x() * self.x() +
+            self.y() * self.y() +
+            self.z() * self.z() +
+            self.w() * self.w() );
+        self.conjugate() * inv_norm
+    }
     pub fn euler_to_quat(roll: FSize, pitch: FSize, yaw: FSize) -> Quat {
         let cr = (roll/2.0).cos();
         let cp = (pitch/2.0).cos();
@@ -171,4 +179,8 @@ impl std::ops::Div<FSize> for Quat {
             self[3] / rhs,
         ] )
     }
+}
+
+impl From<Mat4> for Quat {
+
 }

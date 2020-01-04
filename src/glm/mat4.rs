@@ -29,6 +29,12 @@ impl Mat4 {
     pub fn data(&self) -> [FSize;16] { self.0 }
     pub fn data_ref(&self) -> &[FSize;16] { &self.0 }
     pub fn data_ref_mut(&mut self) -> &mut [FSize;16] { &mut self.0 }
+    pub fn get(&self, col: usize, row: usize) -> &FSize {
+        &self[(col, row)]
+    }
+    pub fn get_mut(&mut self, col: usize, row: usize) -> &mut FSize {
+        &mut self[(col, row)]
+    }
 }
 
 impl std::ops::Index<usize> for Mat4 {
