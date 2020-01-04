@@ -181,6 +181,6 @@ impl std::ops::Div<FSize> for Quat {
     }
 }
 
-impl From<Mat4> for Quat {
-
-}
+//impl From<Mat4> for Quat {
+//
+//}
