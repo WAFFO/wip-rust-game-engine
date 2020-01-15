@@ -44,6 +44,14 @@ impl Vec4 {
             *self
         }
     }
+    pub fn bound(&self, bound: FSize) -> Vec4 {
+        Vec4 ( [
+            self[0] % bound,
+            self[1] % bound,
+            self[2] % bound,
+            self[3] % bound,
+        ] )
+    }
 }
 
 impl std::ops::Index<usize> for Vec4 {
@@ -137,6 +145,33 @@ impl std::ops::Div<FSize> for Vec4 {
             self[1] / rhs,
             self[2] / rhs,
             self[3] / rhs,
+        ] )
+    }
+}
+
+impl std::ops::Rem<FSize> for Vec4 {
+    type Output = Vec4;
+
+    fn rem(self, rhs: FSize) -> Vec4 {
+        if rhs == 0.0 { panic!("Cannot divide by zero. (Vec4 % 0.0)"); }
+        Vec4 ( [
+            self[0] % rhs,
+            self[1] % rhs,
+            self[2] % rhs,
+            self[3] % rhs,
+        ] )
+    }
+}
+
+impl std::ops::RemAssign<FSize> for Vec4 {
+
+    fn rem_assign(&mut self, rhs: FSize) {
+        if rhs == 0.0 { panic!("Cannot divide by zero. (Vec4 % 0.0)"); }
+        *self = Vec4 ( [
+            self[0] % rhs,
+            self[1] % rhs,
+            self[2] % rhs,
+            self[3] % rhs,
         ] )
     }
 }
