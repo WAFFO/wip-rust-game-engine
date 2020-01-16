@@ -29,7 +29,7 @@ Then in your `lib.rs` you can reference it by the name given above
 extern crate goblin;
 ```
 
-and below that create your application with the build in macro
+Below that create your application with the built in macro
 
 ```rust
 //make application BB
@@ -50,7 +50,7 @@ pub fn run() -> Result<Application, JsValue> {
 }
 ```
 
-Now you can hook your application in javascript:
+Now you can hook your application in javascript
 
 ```javascript
 (async () => {
