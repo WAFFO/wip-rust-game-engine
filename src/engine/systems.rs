@@ -19,7 +19,7 @@ impl<'a> System<'a> for UpdatePosition {
         for (pos, vel) in (&mut pos, &vel).join() {
             pos.position += vel.position * delta;
             pos.rotation += vel.rotation * delta;
-            pos.rotation %= std::f32::consts::PI;
+            pos.rotation %= 2.0 * std::f32::consts::PI;
         }
     }
 }
