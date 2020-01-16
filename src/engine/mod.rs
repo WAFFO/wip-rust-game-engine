@@ -29,7 +29,7 @@ pub struct Engine {
 }
 
 impl Engine {
-    pub fn new() -> Result<Engine, JsValue> {
+    pub fn new(canvas : String) -> Result<Engine, JsValue> {
 
         let mut world = World::new();
 
@@ -49,7 +49,7 @@ impl Engine {
 
         //let entities : Vec<Entity> = Vec::new();
 
-        let renderer = Renderer::new()?;
+        let renderer = Renderer::new(canvas)?;
 
         let timer = Timer::new();
 

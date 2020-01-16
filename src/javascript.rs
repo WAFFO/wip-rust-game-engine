@@ -11,8 +11,8 @@ pub fn get_document() -> web_sys::Document {
         .expect("Could not attach to document.")
 }
 
-pub fn get_canvas() -> Result<(web_sys::HtmlCanvasElement), JsValue> {
-    let elm = get_document().get_element_by_id("canvas").unwrap();
+pub fn get_canvas(id : String) -> Result<(web_sys::HtmlCanvasElement), JsValue> {
+    let elm = get_document().get_element_by_id(id.as_str()).unwrap();
     let canvas = elm.dyn_into::<web_sys::HtmlCanvasElement>()?;
     Ok(canvas)
 }

@@ -26,9 +26,9 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    pub fn new() -> Result<(Renderer), JsValue> {
+    pub fn new(canvas_id : String) -> Result<(Renderer), JsValue> {
         // Gather our canvas from the DOM
-        let canvas: HtmlCanvasElement = get_canvas()?;
+        let canvas: HtmlCanvasElement = get_canvas(canvas_id)?;
 
         // Cast our canvas into a WebGl context
         let context = canvas
