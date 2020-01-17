@@ -37,11 +37,11 @@ create_app!(Template);
 
 // MAIN
 #[wasm_bindgen]
-pub fn run() -> Result<Application, JsValue> {
+pub fn run(canvas_id : String) -> Result<Application, JsValue> {
     // hook panics to the console
     panic::set_hook(Box::new(console_error_panic_hook::hook));
 
-    let mut engine = Engine::new()?;
+    let mut engine = Engine::new(canvas_id)?;
     let game = Template::new(&mut engine);
 
     let app = Application::new(engine, game);
