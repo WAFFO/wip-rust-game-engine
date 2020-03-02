@@ -6,7 +6,7 @@ pub mod mat4;
 //pub mod quat;
 
 
-type FSize = f32;
+pub type FSize = f32;
 
 pub use self::vec3::Vec3;
 pub use self::vec4::Vec4;
