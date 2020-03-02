@@ -2,23 +2,23 @@
 use super::FSize;
 use glm::{Mat4, Vec3, Mat3};
 
-// note: layout is [ x, y, z, w]
-//              or [ i, j, k, w]
+// note: layout is [ w, x, y, z]
+//              or [ w, i, j, k]
 #[derive(Debug, Copy, Clone, Default, PartialEq)]
 struct Quat (pub(crate) [FSize; 4]);
 
 
 impl Quat {
-    pub fn new(w: FSize, x: FSize, y: FSize, z: FSize) -> Quat { Quat ( [x, y, z, w] ) }
-    pub fn x(&self) -> FSize { self.0[0] }
-    pub fn y(&self) -> FSize { self.0[1] }
-    pub fn z(&self) -> FSize { self.0[2] }
-    pub fn w(&self) -> FSize { self.0[3] }
+    pub fn new(w: FSize, x: FSize, y: FSize, z: FSize) -> Quat { Quat ( [w, x, y, z] ) }
+    pub fn w(&self) -> FSize { self.0[0] }
+    pub fn x(&self) -> FSize { self.0[1] }
+    pub fn y(&self) -> FSize { self.0[2] }
+    pub fn z(&self) -> FSize { self.0[3] }
     pub fn cross(&self, other: &Vec3) -> Vec3 {
         Vec3 ( [
+            self[2] * other[3] - self[3] * other[2],
+            self[3] * other[1] - self[1] * other[3],
             self[1] * other[2] - self[2] * other[1],
-            self[2] * other[0] - self[0] * other[2],
-            self[0] * other[1] - self[1] * other[0],
         ] )
     }
     pub fn mag(&self) -> FSize { ( self[0].powi(2) + self[1].powi(2) + self[2].powi(2) + self[3].powi(2) ).sqrt() }
@@ -39,18 +39,18 @@ impl Quat {
     }
     pub fn conjugate(&self) -> Quat {
         Quat ( [
+             self.w(), // w
             -self.x(), // x
             -self.y(), // y
             -self.z(), // z
-             self.w(), // w
         ] )
     }
     pub fn inverse(&self) -> Quat {
         let inv_norm = 1.0 / (
+            self.w() * self.w() +
             self.x() * self.x() +
             self.y() * self.y() +
-            self.z() * self.z() +
-            self.w() * self.w() );
+            self.z() * self.z() );
         self.conjugate() * inv_norm
     }
     pub fn euler_to_quat(roll: FSize, pitch: FSize, yaw: FSize) -> Quat {
@@ -118,10 +118,10 @@ impl std::ops::Mul<Quat> for Quat {
 
     fn mul(self, rhs: Quat) -> Quat {
         Quat ( [
+            self.w() * rhs.w() - self.x() * rhs.x() - self.y() * rhs.y() - self.z() * rhs.z(), // w
             self.x() * rhs.w() + self.w() * rhs.x() + self.y() * rhs.z() - self.z() * rhs.y(), // x
             self.y() * rhs.w() + self.w() * rhs.y() + self.z() * rhs.x() - self.x() * rhs.z(), // y
             self.z() * rhs.w() + self.w() * rhs.z() + self.x() * rhs.y() - self.y() * rhs.x(), // z
-            self.w() * rhs.w() - self.x() * rhs.x() - self.y() * rhs.y() - self.z() * rhs.z(), // w
         ] )
     }
 }
@@ -131,10 +131,10 @@ impl std::ops::Mul<Vec3> for Quat {
 
     fn mul(self, rhs: Vec3) -> Quat {
         Quat ( [
+           -self.x() * rhs.x() - self.y() * rhs.y() - self.z() * rhs.z(), // w
             self.w() * rhs.x() + self.y() * rhs.z() - self.z() * rhs.y(), // x
             self.w() * rhs.y() + self.z() * rhs.x() - self.x() * rhs.z(), // y
             self.w() * rhs.z() + self.x() * rhs.y() - self.y() * rhs.x(), // z
-           -self.x() * rhs.x() - self.y() * rhs.y() - self.z() * rhs.z(), // w
         ] )
     }
 }
