@@ -250,23 +250,6 @@ impl Renderer {
         result
     }
 
-    fn get_vectors(transform: &Transform, mesh: &StaticMesh, mesh_manager: &MeshManager
-    ) -> Option<(MeshIndex, Mat4)> {
-        if let Some(mesh_index) = mesh_manager.get(&mesh.mesh_id) {
-            Some((
-                mesh_index,
-                 glm::translate(transform.position)
-                 * glm::rotate_x(transform.rotation[0])
-                 * glm::rotate_y(transform.rotation[1])
-                 * glm::rotate_z(transform.rotation[2])
-                 * glm::scale(transform.scale),
-            ))
-        }
-        else {
-            None
-        }
-    }
-
     fn get_lights(world: &World) -> Vec<(Vec3, Vec4)> {
         let _transform_storage = world.read_storage::<Transform>();
         let _light_storage = world.read_storage::<Light>();
@@ -296,9 +279,9 @@ impl Renderer {
 
         for (transform, mesh, _) in (&_transform_storage, &_mesh_storage, &_solid_storage).join() {
 
-            if let Some((mesh_index, model)) = Renderer::get_vectors(&transform, &mesh, &mesh_manager) {
+            if let Some(mesh_index) = mesh_manager.get(&mesh) {
 
-                let mut model = model;
+                let mut model = transform.model();
                 // model data
                 self.shader.set_mat4(&self.context, "u_model", &mut model);
 
@@ -320,9 +303,9 @@ impl Renderer {
 
         for (transform, mesh, light) in (&_transform_storage, &_mesh_storage, &_light_storage).join() {
 
-            if let Some((mesh_index, model)) = Renderer::get_vectors(&transform, &mesh, &mesh_manager) {
+            if let Some(mesh_index) = mesh_manager.get(&mesh) {
 
-                let mut model = model;
+                let mut model = transform.model();
                 // model data
                 self.ls_shader.set_mat4(&self.context, "u_model", &mut model);
 

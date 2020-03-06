@@ -5,31 +5,13 @@ use engine::mesh_manager::UUID;
 
 // components not in this file
 mod camera;
+mod transform;
 
 // raise to this level
 pub use self::camera::Camera;
+pub use self::transform::Transform;
 
 // components
-pub struct Transform {
-    pub position: Vec3,
-    pub rotation: Vec3,
-    pub scale: Vec3,
-}
-
-impl Component for Transform {
-    type Storage = VecStorage<Self>;
-}
-
-impl Default for Transform {
-    fn default() -> Transform {
-        Transform {
-            position: Vec3::new(0.0, 0.0, 0.0),
-            rotation: Vec3::new(0.0, 0.0, 0.0),
-            scale: Vec3::new(0.0, 0.0, 0.0),
-        }
-    }
-}
-
 pub struct Velocity {
     pub position: Vec3,
     pub rotation: Vec3,
