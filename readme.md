@@ -20,7 +20,7 @@ Pull this repo and reference it locally through your cargo.toml
 
 ```toml
 [dependencies.goblin]
-path = "../engine"
+path = "../goblin-engine"
 ```
 
 Then in your `lib.rs` you can reference it by the name given above
