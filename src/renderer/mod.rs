@@ -279,7 +279,7 @@ impl Renderer {
 
         for (transform, mesh, _) in (&_transform_storage, &_mesh_storage, &_solid_storage).join() {
 
-            if let Some(mesh_index) = mesh_manager.get(&mesh) {
+            if let Some(mesh_index) = mesh_manager.get(&mesh.mesh_id) {
 
                 let mut model = transform.model();
                 // model data
@@ -303,7 +303,7 @@ impl Renderer {
 
         for (transform, mesh, light) in (&_transform_storage, &_mesh_storage, &_light_storage).join() {
 
-            if let Some(mesh_index) = mesh_manager.get(&mesh) {
+            if let Some(mesh_index) = mesh_manager.get(&mesh.mesh_id) {
 
                 let mut model = transform.model();
                 // model data

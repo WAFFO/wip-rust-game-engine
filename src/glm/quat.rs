@@ -11,6 +11,8 @@ struct Quat (pub(crate) [FSize; 4]);
 
 
 impl Quat {
+    const DELTA: FSize = 0.000001;
+
     pub fn new(w: FSize, x: FSize, y: FSize, z: FSize) -> Quat { Quat ( [w, x, y, z] ) }
     pub fn identity() -> Quat { Quat ( [1.0, 0.0, 0.0, 0.0] ) }
     pub fn axis_of_rotation(axis: Vec3, angle: FSize) -> Quat {
@@ -38,7 +40,7 @@ impl Quat {
     pub fn normalize(&self) -> Quat {
         let mag = self.mag();
         if mag != 0.0 {
-            self / mag
+            *self / mag
         }
         else {
             *self
@@ -104,6 +106,8 @@ impl Quat {
 
     pub fn slerp(&self, to: &Quat, t: FSize) -> Quat {
         let mut to1: [FSize; 4] = [0.0; 4];
+        let scale0: f32;
+        let scale1: f32;
 
         // calc cosine
         let mut cosom = self.x() * to.x() + self.y() * to.y() + self.z() * to.z() + self.w() * to.w();
@@ -125,7 +129,7 @@ impl Quat {
         }
 
         // calculate coefficients
-        if 1.0 - cosom > 1.e-6
+        if 1.0 - cosom > Self::DELTA
         {
             // standard case (slerp)
             let omega = cosom.acos();
@@ -150,6 +154,8 @@ impl Quat {
 
     pub fn lerp(&self, to: &Quat, t: FSize) -> Quat {
         let mut to1: [FSize; 4] = [0.0; 4];
+        let scale0: f32;
+        let scale1: f32;
 
         // calc cosine
         let mut cosom = self.x() * to.x() + self.y() * to.y() + self.z() * to.z() + self.w() * to.w();
@@ -223,7 +229,7 @@ impl Quat {
         let len = tx * tx + ty * ty + tz * tz;
 
         // if it's pretty much not zero
-        if len > 1.e-6
+        if len > Self::DELTA
         {
             (
                 Vec3::new(tx * (1.0 / len), ty * (1.0 / len), tz * (1.0 / len)),
@@ -241,7 +247,9 @@ impl Quat {
     }
 }
 
-
+//------------------------------------------------------------------------------------------------//
+// OPERATORS                                                                                      //
+//------------------------------------------------------------------------------------------------//
 impl std::ops::Mul<Quat> for Quat {
     type Output = Quat;
 
@@ -290,9 +298,17 @@ impl std::ops::Mul<FSize> for Quat {
     }
 }
 
-impl Display for Quaternion {
-    fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
-        write!(f, "({} + {}i + {}j + {}k)", self.w(), self.x(), self.y(), self.z())
+impl std::ops::Div<FSize> for Quat {
+    type Output = Quat;
+
+    fn div(self, rhs: FSize) -> Self::Output {
+        if rhs == 0.0 { panic!("Cannot divide by zero. (Quat / 0.0)"); }
+        Quat ( [
+            self[0] / rhs,
+            self[1] / rhs,
+            self[2] / rhs,
+            self[3] / rhs,
+        ] )
     }
 }
 
@@ -310,6 +326,9 @@ impl std::ops::IndexMut<usize> for Quat {
     }
 }
 
+//------------------------------------------------------------------------------------------------//
+// FROM                                                                                           //
+//------------------------------------------------------------------------------------------------//
 impl From<Mat4> for Quat {
     fn from(m: Mat4) -> Self {
         let tr: FSize = m[0] + m[5] + m[10];
@@ -328,10 +347,10 @@ impl From<Mat4> for Quat {
         // diagonal is negative
         else {
             let mut q: [FSize; 4] = [0.0; 4];
-            let i: u8;
-            let j: u8;
-            let k: u8;
-            let nxt: [u8; 3] = [1, 2, 0];
+            let mut i: usize;
+            let j: usize;
+            let k: usize;
+            let nxt: [usize; 3] = [1, 2, 0];
 
             i = 0;
             if m[5] > m[0] { i = 1; }
@@ -351,6 +370,15 @@ impl From<Mat4> for Quat {
 
 impl From<Vec3> for Quat {
     fn from(f: Vec3) -> Self {
-        euler_to_quat(f.x(), f.y(), f.z())
+        Quat::from_euler(f.x(), f.y(), f.z())
+    }
+}
+
+//------------------------------------------------------------------------------------------------//
+// DEBUG                                                                                          //
+//------------------------------------------------------------------------------------------------//
+impl Display for Quat {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
+        write!(f, "({} + {}i + {}j + {}k)", self.w(), self.x(), self.y(), self.z())
     }
 }
