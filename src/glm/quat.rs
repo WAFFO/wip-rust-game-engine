@@ -189,7 +189,72 @@ impl Quat {
         )
     }
 
-    pub fn from_euler(yaw: FSize, pitch: FSize, roll: FSize) -> Quat {
+    // create a rotation from one axis to another. These must be unit vectors
+    pub fn from_two_axis(from: Vec3, to: Vec3) -> Quat {
+        let mut tx: FSize;
+        let mut ty: FSize;
+        let mut tz: FSize;
+        let dist: FSize;
+
+        // get dot product of two vectors
+        let cost = from.x() * to.x() + from.y() * to.y() + from.z() * to.z();
+
+        // check if parallel
+        if cost > 0.99999 {
+            Quat::new(1.0, 0.0, 0.0, 0.0)
+        }
+        else if cost < -0.99999 {     // check if opposite
+            // check if we can use cross product of from vector with [1, 0, 0]
+            tx = 0.0;
+            ty = x1;
+            tz = -y1;
+
+            let len = (ty*ty + tz*tz).sqrt();
+
+            if len < DELTA {
+                // nope! we need cross product of from vector with [0, 1, 0]
+                tx = -z1;
+                ty = 0.0;
+                tz = x1;
+            }
+
+            // normalize
+            dist = 1.0 / (tx*tx + ty*ty + tz*tz).sqrt();
+
+            tx *= dist;
+            ty *= dist;
+            tz *= dist;
+
+            // return
+            Quat::new(0.0, tx, ty, tz)
+        }
+
+        // ... else we can just cross two vectors
+        tx = y1 * z2 - z1 * y2;
+        ty = z1 * x2 - x1 * z2;
+        tz = x1 * y2 - y1 * x2;
+
+        dist = 1.0 / (tx*tx + ty*ty + tz*tz).sqrt();
+
+        tx *= dist;
+        ty *= dist;
+        tz *= dist;
+
+        // we have to use half-angle formulae (sin^2 t = ( 1 - cos (2t) ) /2)
+        let ss = (0.5 * (1.0 - cost)).sqrt();
+
+        tx *= ss;
+        ty *= ss;
+        tz *= ss;
+
+        // scale the axis to get the normalized quaternion
+        // cos^2 t = ( 1 + cos (2t) ) / 2
+        // w part is cosine of half the rotation angle
+        Quat::new((0.5 * (1.0 + cost)).sqrt(), tx, ty, tz)
+    }
+
+    // not efficient
+    pub fn from_euler_ypr(yaw: FSize, pitch: FSize, roll: FSize) -> Quat {
         let cr = (roll/2.0).cos();
         let cp = (pitch/2.0).cos();
         let cy = (yaw/2.0).cos();
@@ -209,7 +274,7 @@ impl Quat {
     }
 
     pub fn from_euler_angle(x: FSize, y: FSize, z: FSize, angle: FSize) -> Quat {
-        // 1 / normalize
+        // normalize
         let dist = 1.0 / (x*x + y*y + z*z).sqrt();
 
         Quat ([
@@ -220,7 +285,22 @@ impl Quat {
         ])
     }
 
-    pub fn to_euler(&self) -> (Vec3, FSize) {
+    // not efficient
+    pub fn to_euler_ypr(&self) -> Vec3 {
+        let t0 = 2.0 * (self.w() * self.x() + self.y() * self.z());
+        let t1 = 1.0 - 2.0 * (self.x() * self.x() + self.y() * self.y());
+        let roll = math.atan2(t0, t1);
+        let mut t2 = 2.0 * (self.w() * self.y() - self.z() * self.x());
+        t2 = if t2 > 1.0 { 1.0 } else { t2 };
+        t2 = if t2 < -1.0 { -1.0 } else { t2 };
+        let pitch = math.asin(t2);
+        let t3 = 2.0 * (self.w() * self.z() + self.x() * self.y());
+        let t4 = 1.0 - 2.0 * (self.y() * self.y() + self.z() * self.z());
+        let yaw = math.atan2(t3, t4);
+        Vec3([yaw, pitch, roll])
+    }
+
+    pub fn to_euler_angle(&self) -> (Vec3, FSize) {
         // cache variables
         let tx = self.x();
         let ty = self.y();
@@ -370,7 +450,7 @@ impl From<Mat4> for Quat {
 
 impl From<Vec3> for Quat {
     fn from(f: Vec3) -> Self {
-        Quat::from_euler(f.x(), f.y(), f.z())
+        Quat::from_euler_ypr(f.x(), f.y(), f.z())
     }
 }
 
