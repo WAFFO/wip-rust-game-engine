@@ -1,6 +1,6 @@
 // in progress...
 use super::FSize;
-use glm::{Mat4, Vec3, Mat3};
+use glm::{NEAR_ZERO, Mat4, Vec3, Mat3};
 
 use std::fmt::{Display, Formatter, Error};
 
@@ -11,7 +11,6 @@ struct Quat (pub(crate) [FSize; 4]);
 
 
 impl Quat {
-    const DELTA: FSize = 0.000001;
 
     pub fn new(w: FSize, x: FSize, y: FSize, z: FSize) -> Quat { Quat ( [w, x, y, z] ) }
     pub fn identity() -> Quat { Quat ( [1.0, 0.0, 0.0, 0.0] ) }
@@ -104,6 +103,10 @@ impl Quat {
         ])
     }
 
+    pub fn rotate(&self, rotation: &Quat) -> Quat {
+        self * rotation
+    }
+
     pub fn slerp(&self, to: &Quat, t: FSize) -> Quat {
         let mut to1: [FSize; 4] = [0.0; 4];
         let scale0: f32;
@@ -129,7 +132,7 @@ impl Quat {
         }
 
         // calculate coefficients
-        if 1.0 - cosom > Self::DELTA
+        if 1.0 - cosom > NEAR_ZERO
         {
             // standard case (slerp)
             let omega = cosom.acos();
@@ -211,7 +214,7 @@ impl Quat {
 
             let len = (ty*ty + tz*tz).sqrt();
 
-            if len < DELTA {
+            if len < NEAR_ZERO {
                 // nope! we need cross product of from vector with [0, 1, 0]
                 tx = -z1;
                 ty = 0.0;
@@ -309,7 +312,7 @@ impl Quat {
         let len = tx * tx + ty * ty + tz * tz;
 
         // if it's pretty much not zero
-        if len > Self::DELTA
+        if len > NEAR_ZERO
         {
             (
                 Vec3::new(tx * (1.0 / len), ty * (1.0 / len), tz * (1.0 / len)),
@@ -339,7 +342,7 @@ impl std::ops::Mul<Quat> for Quat {
             self.x() * rhs.w() + self.w() * rhs.x() + self.y() * rhs.z() - self.z() * rhs.y(), // x
             self.y() * rhs.w() + self.w() * rhs.y() + self.z() * rhs.x() - self.x() * rhs.z(), // y
             self.z() * rhs.w() + self.w() * rhs.z() + self.x() * rhs.y() - self.y() * rhs.x(), // z
-        ] )
+        ] ).normalize()
     }
 }
 

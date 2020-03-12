@@ -13,6 +13,7 @@ pub use self::vec4::Vec4;
 pub use self::mat3::Mat3;
 pub use self::mat4::Mat4;
 
+pub const NEAR_ZERO: FSize = 0.000001;
 
 pub fn perspective(aspect: FSize, fov: FSize, near: FSize, far: FSize) -> Mat4 {
     let xy_max = near * fov.to_radians();
