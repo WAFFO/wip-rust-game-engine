@@ -12,6 +12,7 @@ pub use self::vec3::Vec3;
 pub use self::vec4::Vec4;
 pub use self::mat3::Mat3;
 pub use self::mat4::Mat4;
+pub use self::quat::Quat;
 
 pub const NEAR_ZERO: FSize = 0.000001;
 
@@ -57,6 +58,10 @@ pub fn translate(t: Vec3) -> Mat4 {
         0.0,  0.0,  1.0, 0.0,
         t[0], t[1], t[2], 1.0,
     ])
+}
+
+pub fn rotate(q: Quat) -> Mat4 {
+    q.mat4()
 }
 
 pub fn rotate_x(f: FSize) -> Mat4 {

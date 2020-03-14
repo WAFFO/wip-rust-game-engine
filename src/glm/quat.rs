@@ -6,8 +6,8 @@ use std::fmt::{Display, Formatter, Error};
 
 // note: layout is [ w, x, y, z]
 //              or [ w, i, j, k]
-#[derive(Debug, Copy, Clone, Default, PartialEq)]
-struct Quat (pub(crate) [FSize; 4]);
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct Quat (pub(crate) [FSize; 4]);
 
 
 impl Quat {
@@ -101,41 +101,53 @@ impl Quat {
                   xz + wy,       yz - wx, 1.0 - xx - yy, 0.0,
                       0.0,           0.0,           0.0, 1.0,
         ])
+
+//        m[0][0] = 1.0 - (yy + zz);
+//        m[1][0] = xy - wz;
+//        m[2][0] = xz + wy;
+//        m[3][0] = 0.0;
+//
+//        m[0][1] = xy + wz;
+//        m[1][1] = 1.0 - (xx + zz);
+//        m[2][1] = yz - wx;
+//        m[3][1] = 0.0;
+//
+//
+//        m[0][2] = xz - wy;
+//        m[1][2] = yz + wx;
+//        m[2][2] = 1.0 - (xx + yy);
+//        m[3][2] = 0.0;
+//
+//
+//        m[0][3] = 0;
+//        m[1][3] = 0;
+//        m[2][3] = 0;
+//        m[3][3] = 1;
+
     }
 
-    pub fn rotate(&self, rotation: &Quat) -> Quat {
-        self * rotation
+    pub fn rotate(&self, rotation: Quat) -> Quat {
+        *self * rotation
     }
 
-    pub fn slerp(&self, to: &Quat, t: FSize) -> Quat {
-        let mut to1: [FSize; 4] = [0.0; 4];
+    pub fn slerp(&self, mut to: Quat, t: FSize) -> Quat {
         let scale0: f32;
         let scale1: f32;
 
-        // calc cosine
-        let mut cosom = self.x() * to.x() + self.y() * to.y() + self.z() * to.z() + self.w() * to.w();
+        // calc dot
+        let mut dot = self.x() * to.x() + self.y() * to.y() + self.z() * to.z() + self.w() * to.w();
 
         // adjust signs (if necessary)
-        if cosom < 0.0 {
-            cosom = -cosom;
+        if dot < 0.0 {
+            dot = -dot;
 
-            to1[0] = -to.x();
-            to1[1] = -to.y();
-            to1[2] = -to.z();
-            to1[3] = -to.w();
-        }
-        else {
-            to1[0] = to.x();
-            to1[1] = to.y();
-            to1[2] = to.z();
-            to1[3] = to.w();
+            to = to * -1.0;
         }
 
         // calculate coefficients
-        if 1.0 - cosom > NEAR_ZERO
-        {
+        if 1.0 - dot > NEAR_ZERO {
             // standard case (slerp)
-            let omega = cosom.acos();
+            let omega = dot.acos();
             let sinom = omega.sin();
             scale0 = ((1.0 - t) * omega).sin() / sinom;
             scale1 = (t * omega).sin() / sinom;
@@ -148,47 +160,33 @@ impl Quat {
 
         // calculate to values
         Quat::new(
-            scale0 * self.x() + scale1 * to1[0],
-            scale0 * self.y() + scale1 * to1[1],
-            scale0 * self.z() + scale1 * to1[2],
-            scale0 * self.w() + scale1 * to1[3],
+            scale0 * self.w() + scale1 * to[0],
+            scale0 * self.x() + scale1 * to[1],
+            scale0 * self.y() + scale1 * to[2],
+            scale0 * self.z() + scale1 * to[3],
         )
     }
 
-    pub fn lerp(&self, to: &Quat, t: FSize) -> Quat {
-        let mut to1: [FSize; 4] = [0.0; 4];
-        let scale0: f32;
-        let scale1: f32;
+    pub fn lerp(&self, mut to: Quat, t: FSize) -> Quat {
 
         // calc cosine
-        let mut cosom = self.x() * to.x() + self.y() * to.y() + self.z() * to.z() + self.w() * to.w();
+        let cosom = self.x() * to.x() + self.y() * to.y() + self.z() * to.z() + self.w() * to.w();
 
         // adjust signs (if necessary)
         if cosom < 0.0 {
-            cosom = -cosom;
-
-            to1[0] = -to.x();
-            to1[1] = -to.y();
-            to1[2] = -to.z();
-            to1[3] = -to.w();
-        }
-        else {
-            to1[0] = to.x();
-            to1[1] = to.y();
-            to1[2] = to.z();
-            to1[3] = to.w();
+            to = to * -1.0;
         }
 
         // linear interpolation
-        scale0 = 1.0 - t;
-        scale1 = t;
+        let scale0 = 1.0 - t;
+        let scale1 = t;
 
         // calculate to values
         Quat::new(
-            scale0 * self.x() + scale1 * to1[0],
-            scale0 * self.y() + scale1 * to1[1],
-            scale0 * self.z() + scale1 * to1[2],
-            scale0 * self.w() + scale1 * to1[3],
+            scale0 * self.w() + scale1 * to[0],
+            scale0 * self.x() + scale1 * to[1],
+            scale0 * self.y() + scale1 * to[2],
+            scale0 * self.z() + scale1 * to[3],
         )
     }
 
@@ -204,21 +202,21 @@ impl Quat {
 
         // check if parallel
         if cost > 0.99999 {
-            Quat::new(1.0, 0.0, 0.0, 0.0)
+            return Quat::new(1.0, 0.0, 0.0, 0.0)
         }
         else if cost < -0.99999 {     // check if opposite
             // check if we can use cross product of from vector with [1, 0, 0]
             tx = 0.0;
-            ty = x1;
-            tz = -y1;
+            ty = from.x();
+            tz = -from.y();
 
             let len = (ty*ty + tz*tz).sqrt();
 
             if len < NEAR_ZERO {
                 // nope! we need cross product of from vector with [0, 1, 0]
-                tx = -z1;
+                tx = -from.z();
                 ty = 0.0;
-                tz = x1;
+                tz = from.x();
             }
 
             // normalize
@@ -228,14 +226,13 @@ impl Quat {
             ty *= dist;
             tz *= dist;
 
-            // return
-            Quat::new(0.0, tx, ty, tz)
+            return Quat::new(0.0, tx, ty, tz)
         }
 
         // ... else we can just cross two vectors
-        tx = y1 * z2 - z1 * y2;
-        ty = z1 * x2 - x1 * z2;
-        tz = x1 * y2 - y1 * x2;
+        tx = from.y() * to.z() - from.z() * to.y();
+        ty = from.z() * to.x() - from.x() * to.z();
+        tz = from.x() * to.y() - from.y() * to.x();
 
         dist = 1.0 / (tx*tx + ty*ty + tz*tz).sqrt();
 
@@ -277,29 +274,38 @@ impl Quat {
     }
 
     pub fn from_euler_angle(x: FSize, y: FSize, z: FSize, angle: FSize) -> Quat {
-        // normalize
-        let dist = 1.0 / (x*x + y*y + z*z).sqrt();
+        // scalar
+        let scale = (angle / 2.0).sin();
 
         Quat ([
             (angle / 2.0).cos(),
-            x * dist,
-            y * dist,
-            z * dist,
+            x * scale,
+            y * scale,
+            z * scale,
         ])
+//        // normalize
+//        let dist = 1.0 / (x*x + y*y + z*z).sqrt();
+//
+//        Quat ([
+//            (angle / 2.0).cos(),
+//            x * dist,
+//            y * dist,
+//            z * dist,
+//        ])
     }
 
     // not efficient
     pub fn to_euler_ypr(&self) -> Vec3 {
         let t0 = 2.0 * (self.w() * self.x() + self.y() * self.z());
         let t1 = 1.0 - 2.0 * (self.x() * self.x() + self.y() * self.y());
-        let roll = math.atan2(t0, t1);
+        let roll = t0.atan2(t1);
         let mut t2 = 2.0 * (self.w() * self.y() - self.z() * self.x());
         t2 = if t2 > 1.0 { 1.0 } else { t2 };
         t2 = if t2 < -1.0 { -1.0 } else { t2 };
-        let pitch = math.asin(t2);
+        let pitch = t2.asin();
         let t3 = 2.0 * (self.w() * self.z() + self.x() * self.y());
         let t4 = 1.0 - 2.0 * (self.y() * self.y() + self.z() * self.z());
-        let yaw = math.atan2(t3, t4);
+        let yaw = t3.atan2(t4);
         Vec3([yaw, pitch, roll])
     }
 
@@ -325,7 +331,7 @@ impl Quat {
     }
 
     pub fn scale_angle(&self, s: FSize) -> Quat {
-        let (vec, angle) = self.to_euler();
+        let (vec, angle) = self.to_euler_angle();
         Quat::from_euler_angle(vec.x(), vec.y(), vec.z(), angle * s)
     }
 }
@@ -343,6 +349,13 @@ impl std::ops::Mul<Quat> for Quat {
             self.y() * rhs.w() + self.w() * rhs.y() + self.z() * rhs.x() - self.x() * rhs.z(), // y
             self.z() * rhs.w() + self.w() * rhs.z() + self.x() * rhs.y() - self.y() * rhs.x(), // z
         ] ).normalize()
+    }
+}
+
+impl std::ops::MulAssign<Quat> for Quat {
+
+    fn mul_assign(&mut self, rhs: Quat) {
+        *self = *self * rhs;
     }
 }
 
@@ -381,6 +394,16 @@ impl std::ops::Mul<FSize> for Quat {
     }
 }
 
+impl std::ops::MulAssign<FSize> for Quat {
+    fn mul_assign(&mut self, rhs: f32) {
+        // may not be a unit quaternion after this
+        self[0] *= rhs;
+        self[1] *= rhs;
+        self[2] *= rhs;
+        self[3] *= rhs;
+    }
+}
+
 impl std::ops::Div<FSize> for Quat {
     type Output = Quat;
 
@@ -392,6 +415,16 @@ impl std::ops::Div<FSize> for Quat {
             self[2] / rhs,
             self[3] / rhs,
         ] )
+    }
+}
+
+impl std::ops::DivAssign<FSize> for Quat {
+    fn div_assign(&mut self, rhs: f32) {
+        // may not be a unit quaternion after this
+        self[0] /= rhs;
+        self[1] /= rhs;
+        self[2] /= rhs;
+        self[3] /= rhs;
     }
 }
 
@@ -415,7 +448,7 @@ impl std::ops::IndexMut<usize> for Quat {
 impl From<Mat4> for Quat {
     fn from(m: Mat4) -> Self {
         let tr: FSize = m[0] + m[5] + m[10];
-        ;
+
         // check the diagonal
         if tr > 0.0 {
             let s: FSize = (tr + 1.0).sqrt();
@@ -458,8 +491,14 @@ impl From<Vec3> for Quat {
 }
 
 //------------------------------------------------------------------------------------------------//
-// DEBUG                                                                                          //
+// OTHER                                                                                          //
 //------------------------------------------------------------------------------------------------//
+impl Default for Quat {
+    fn default() -> Self {
+        Quat([ 1.0, 0.0, 0.0, 0.0 ])
+    }
+}
+
 impl Display for Quat {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         write!(f, "({} + {}i + {}j + {}k)", self.w(), self.x(), self.y(), self.z())

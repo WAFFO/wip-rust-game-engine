@@ -1,34 +1,21 @@
 use specs::{Component, VecStorage};
-use glm::{Vec3, Vec4};
+use glm::Vec4;
 
 use engine::mesh_manager::UUID;
 
 // components not in this file
 mod camera;
 mod transform;
+mod velocity;
+mod angular_velocity;
 
 // raise to this level
 pub use self::camera::Camera;
 pub use self::transform::Transform;
+pub use self::velocity::Velocity;
+pub use self::angular_velocity::AngularVelocity;
 
 // components
-pub struct Velocity {
-    pub position: Vec3,
-    pub rotation: Vec3,
-}
-
-impl Component for Velocity {
-    type Storage = VecStorage<Self>;
-}
-
-impl Default for Velocity {
-    fn default() -> Velocity {
-        Velocity {
-            position: Vec3::new(0.0, 0.0, 0.0),
-            rotation: Vec3::new(0.0, 0.0, 0.0),
-        }
-    }
-}
 
 // TODO: impl std::ops::Add for Transform + Velocity
 

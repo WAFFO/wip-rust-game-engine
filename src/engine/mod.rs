@@ -35,6 +35,7 @@ impl Engine {
 
         world.register::<Transform>();
         world.register::<Velocity>();
+        world.register::<AngularVelocity>();
         world.register::<StaticMesh>();
         world.register::<Camera>();
         world.register::<Solid>();

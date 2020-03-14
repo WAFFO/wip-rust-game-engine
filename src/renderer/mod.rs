@@ -10,7 +10,7 @@ mod shader;
 use self::shader::Shader;
 use engine::components;
 use engine::components::{Transform, StaticMesh, Solid, Light};
-use engine::mesh_manager::{MeshManager, mesh::MeshIndex};
+use engine::mesh_manager::MeshManager;
 use glm::{Vec3, Vec4, Mat4};
 use glm;
 use javascript::get_canvas;
