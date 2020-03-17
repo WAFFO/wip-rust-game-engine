@@ -23,9 +23,7 @@ impl Default for AngularVelocity {
 impl AngularVelocity {
     pub fn get_quat(&self, delta: FSize) -> Quat {
         Quat::from_euler_angle(
-            self.axis.x(),
-            self.axis.y(),
-            self.axis.z(),
+            self.axis,
             self.angle * delta,
         )
     }

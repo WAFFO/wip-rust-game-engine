@@ -17,7 +17,6 @@ macro_rules! create_app {
         #[wasm_bindgen]
         impl Application {
 
-            #[wasm_bindgen]
             pub fn new(engine: Engine, game: $x) -> Application {
                 Application {
                     engine,

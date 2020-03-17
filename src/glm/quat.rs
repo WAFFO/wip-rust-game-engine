@@ -27,12 +27,11 @@ impl Quat {
     pub fn y(&self) -> FSize { self.0[2] }
     pub fn z(&self) -> FSize { self.0[3] }
     pub fn xyz(&self) -> Vec3 { Vec3([self.0[1], self.0[2], self.0[3]]) }
-    pub fn cross(&self, other: &Vec3) -> Vec3 {
-        Vec3 ( [
-            self[2] * other[3] - self[3] * other[2],
-            self[3] * other[1] - self[1] * other[3],
-            self[1] * other[2] - self[2] * other[1],
-        ] )
+    pub fn equals(&self, other: &Quat) -> bool {
+        (self.x() - other.x()).abs() < NEAR_ZERO
+        && (self.y() - other.y()).abs() < NEAR_ZERO
+        && (self.z() - other.z()).abs() < NEAR_ZERO
+        && (self.w() - other.w()).abs() < NEAR_ZERO
     }
     pub fn mag(&self) -> FSize { ( self[0].powi(2) + self[1].powi(2) + self[2].powi(2) + self[3].powi(2) ).sqrt() }
     pub fn length(&self) -> FSize { self.mag() }
@@ -253,7 +252,6 @@ impl Quat {
         Quat::new((0.5 * (1.0 + cost)).sqrt(), tx, ty, tz)
     }
 
-    // not efficient
     pub fn from_euler_ypr(yaw: FSize, pitch: FSize, roll: FSize) -> Quat {
         let cr = (roll/2.0).cos();
         let cp = (pitch/2.0).cos();
@@ -273,28 +271,19 @@ impl Quat {
         ])
     }
 
-    pub fn from_euler_angle(x: FSize, y: FSize, z: FSize, angle: FSize) -> Quat {
+    // vec must be normalized
+    pub fn from_euler_angle(vec: Vec3, angle: FSize) -> Quat {
         // scalar
         let scale = (angle / 2.0).sin();
 
         Quat ([
             (angle / 2.0).cos(),
-            x * scale,
-            y * scale,
-            z * scale,
+            vec[0] * scale,
+            vec[1] * scale,
+            vec[2] * scale,
         ])
-//        // normalize
-//        let dist = 1.0 / (x*x + y*y + z*z).sqrt();
-//
-//        Quat ([
-//            (angle / 2.0).cos(),
-//            x * dist,
-//            y * dist,
-//            z * dist,
-//        ])
     }
 
-    // not efficient
     pub fn to_euler_ypr(&self) -> Vec3 {
         let t0 = 2.0 * (self.w() * self.x() + self.y() * self.z());
         let t1 = 1.0 - 2.0 * (self.x() * self.x() + self.y() * self.y());
@@ -310,20 +299,14 @@ impl Quat {
     }
 
     pub fn to_euler_angle(&self) -> (Vec3, FSize) {
-        // cache variables
-        let tx = self.x();
-        let ty = self.y();
-        let tz = self.z();
 
-        let len = tx * tx + ty * ty + tz * tz;
+        let angle = 2.0 * self.w().acos();
+        let scale = (angle / 2.0).sin();
 
-        // if it's pretty much not zero
-        if len > NEAR_ZERO
+        // if it's not pretty much zero
+        if scale > NEAR_ZERO
         {
-            (
-                Vec3::new(tx * (1.0 / len), ty * (1.0 / len), tz * (1.0 / len)),
-                2.0 * self.w().acos(),
-            )
+            ( Vec3::new(self.x() / scale, self.y() / scale, self.z() / scale), angle )
         }
         else {
             ( Vec3::new(0.0, 0.0, 1.0), 0.0 )
@@ -332,7 +315,7 @@ impl Quat {
 
     pub fn scale_angle(&self, s: FSize) -> Quat {
         let (vec, angle) = self.to_euler_angle();
-        Quat::from_euler_angle(vec.x(), vec.y(), vec.z(), angle * s)
+        Quat::from_euler_angle(vec, angle * s)
     }
 }
 

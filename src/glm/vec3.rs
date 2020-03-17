@@ -44,6 +44,14 @@ impl Vec3 {
             self[2] % bound,
         ] )
     }
+    pub fn perpendicular(&self) -> Vec3 {
+        if self[2]<self[0] {
+            Vec3::new(self[1],-self[0],0.0)
+        }
+        else {
+            Vec3::new(0.0,-self[2],self[1])
+        }
+    }
 }
 
 impl std::ops::Index<usize> for Vec3 {
