@@ -1,10 +1,12 @@
 
 use specs::{Component, VecStorage};
-use glm::{Vec3, Quat, FSize};
+use cgmath::{Vector3, Quaternion, Rotation3, Rad};
+
+use engine::FS;
 
 pub struct AngularVelocity {
-    pub axis: Vec3,
-    pub angle: FSize,
+    pub axis: Vector3<FS>,
+    pub angle: FS,
 }
 
 impl Component for AngularVelocity {
@@ -14,17 +16,14 @@ impl Component for AngularVelocity {
 impl Default for AngularVelocity {
     fn default() -> AngularVelocity {
         AngularVelocity {
-            axis: Vec3::new(0.0, 0.0, 1.0),
+            axis: Vector3::new(0.0, 0.0, 1.0),
             angle: 0.0,
         }
     }
 }
 
 impl AngularVelocity {
-    pub fn get_quat(&self, delta: FSize) -> Quat {
-        Quat::from_euler_angle(
-            self.axis,
-            self.angle * delta,
-        )
+    pub fn get_quat(&self, delta: FS) -> Quaternion<FS> {
+        Quaternion::from_axis_angle( self.axis, Rad(self.angle * delta) )
     }
 }

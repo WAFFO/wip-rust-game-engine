@@ -1,10 +1,12 @@
-use glm::{Vec3, Mat4, Quat, translate, rotate, scale};
+use cgmath::{Vector3, Quaternion, Matrix4};
 use specs::{VecStorage, Component};
 
+use engine::FS;
+
 pub struct Transform {
-    pub position: Vec3,
-    pub rotation: Quat,
-    pub scale: Vec3,
+    pub position: Vector3<FS>,
+    pub rotation: Quaternion<FS>,
+    pub scale: Vector3<FS>,
 }
 
 impl Component for Transform {
@@ -14,21 +16,21 @@ impl Component for Transform {
 impl Default for Transform {
     fn default() -> Transform {
         Transform {
-            position: Vec3::new(0.0, 0.0, 0.0),
-            rotation: Quat::new(1.0, 0.0, 0.0, 0.0),
-            scale: Vec3::new(0.0, 0.0, 0.0),
+            position: Vector3::new(0.0, 0.0, 0.0),
+            rotation: Quaternion::new(1.0, 0.0, 0.0, 0.0),
+            scale: Vector3::new(0.0, 0.0, 0.0),
         }
     }
 }
 
 impl Transform {
-    pub fn model(&self) -> Mat4 {
-        translate(self.position)
-            * rotate(self.rotation)
-            * scale(self.scale)
+    pub fn model(&self) -> Matrix4<FS> {
+        Matrix4::from_translation(self.position)
+            * Matrix4::from(self.rotation)
+            * Matrix4::from_nonuniform_scale(self.scale.x, self.scale.y, self.scale.z)
     }
 
-    pub fn rotate(&mut self, rotation: Quat) {
+    pub fn rotate(&mut self, rotation: Quaternion<FS>) {
         self.rotation = self.rotation * rotation;
     }
 }

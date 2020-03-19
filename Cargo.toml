@@ -1,13 +1,14 @@
 [package]
 name = "goblin"
-version = "0.1.1"
-authors = ["team goblin"]
+version = "0.1.2"
+authors = ["Garrett Steffen <garrettsteffen@gmail.com>"]
 
 [dependencies]
 js-sys = "0.3.24"
 wasm-bindgen = "0.2.47"
 console_error_panic_hook = "0.1.6"
 specs = "0.14.0"
+cgmath = "0.17.0"
 
 [dependencies.web-sys]
 version = "0.3.24"

@@ -3,6 +3,7 @@ extern crate wasm_bindgen;
 extern crate js_sys;
 extern crate web_sys;
 extern crate specs;
+extern crate cgmath;
 
 use wasm_bindgen::prelude::*;
 
@@ -17,7 +18,6 @@ pub mod game;
 pub mod renderer;
 pub mod timer;
 pub mod javascript;
-pub mod glm;
 
 // bring to the surface
 //pub use application::Application;

@@ -1,9 +1,10 @@
-
+use cgmath::{Vector3, Quaternion};
 use specs::{Component, VecStorage};
-use glm::{Vec3, Quat};
+
+use engine::FS;
 
 pub struct Velocity {
-    pub position: Vec3,
+    pub position: Vector3<FS>,
 }
 
 impl Component for Velocity {
@@ -13,7 +14,7 @@ impl Component for Velocity {
 impl Default for Velocity {
     fn default() -> Velocity {
         Velocity {
-            position: Vec3::new(0.0, 0.0, 0.0),
+            position: Vector3::new(0.0, 0.0, 0.0),
         }
     }
 }

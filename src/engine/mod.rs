@@ -17,6 +17,8 @@ use self::input::*;
 use renderer::Renderer;
 use timer::Timer;
 
+// Float Size
+pub type FS = f32;
 
 // Engine
 #[wasm_bindgen]

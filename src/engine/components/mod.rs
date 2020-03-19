@@ -1,6 +1,7 @@
 use specs::{Component, VecStorage};
-use glm::Vec4;
+use cgmath::Vector4;
 
+use engine::FS;
 use engine::mesh_manager::UUID;
 
 // components not in this file
@@ -36,15 +37,17 @@ impl Component for Solid {
 }
 
 pub struct Light{
-    pub color: Vec4,
+    pub color: Vector4<FS>,
 }
+
 impl Component for Light {
     type Storage = VecStorage<Self>;
 }
+
 impl Default for Light {
     fn default() -> Light {
         Light {
-            color: Vec4::new(1.0, 1.0, 1.0, 1.0),
+            color: Vector4::new(1.0, 1.0, 1.0, 1.0),
         }
     }
 }

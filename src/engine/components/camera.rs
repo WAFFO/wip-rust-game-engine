@@ -1,14 +1,15 @@
 use std::f32::consts::PI;
+use cgmath::{Vector3, InnerSpace};
 use specs::{Component,VecStorage};
 
-use ::glm::{Vec3, FSize};
+use engine::FS;
 
 pub struct Camera {
-    pub rotation: Vec3,
-    // pub target: Vec3,
-    pub pitch: FSize,
-    pub yaw: FSize,
-    pub pole_arm: FSize,
+    pub rotation: Vector3<FS>,
+    // pub target: Vector3<FS>,
+    pub pitch: FS,
+    pub yaw: FS,
+    pub pole_arm: FS,
 }
 
 //   side view    |    top view
@@ -24,13 +25,13 @@ impl Camera {
         self.rotation[1] = self.pitch.sin() * self.pole_arm;
         self.rotation[2] = self.pitch.cos() * self.yaw.cos() * self.pole_arm;
     }
-    pub fn forward(&self) -> Vec3 {
+    pub fn forward(&self) -> Vector3<FS> {
         self.rotation.normalize()
     }
-    pub fn right(&self) -> Vec3 {
-        self.rotation.cross(&Vec3::new(0.0, 1.0, 0.0)).normalize()
+    pub fn right(&self) -> Vector3<FS> {
+        self.rotation.cross(Vector3::new(0.0, 1.0, 0.0)).normalize()
     }
-    pub fn add_pitch(&mut self, pitch: FSize) {
+    pub fn add_pitch(&mut self, pitch: FS) {
         self.pitch += pitch;
 
         if self.pitch > PI / 2.0 - 0.1 {
@@ -41,12 +42,12 @@ impl Camera {
 
         self.update();
     }
-    pub fn add_yaw(&mut self, yaw: FSize) {
+    pub fn add_yaw(&mut self, yaw: FS) {
         self.yaw -= yaw;
 
         self.update();
     }
-    pub fn add_pole_arm(&mut self, len: FSize) {
+    pub fn add_pole_arm(&mut self, len: FS) {
         self.pole_arm += len;
 
         if self.pole_arm < 0.1 {
@@ -64,8 +65,8 @@ impl Component for Camera {
 impl Default for Camera {
     fn default() -> Camera {
         Camera {
-            rotation: Vec3::new(0.0, 0.0, 0.0),
-            // target: Vec3::new(0.0, 0.0, 0.0),
+            rotation: Vector3::new(0.0, 0.0, 0.0),
+            // target: Vector3::new(0.0, 0.0, 0.0),
             pitch: 0.0,
             yaw: 0.0,
             pole_arm: 0.1,

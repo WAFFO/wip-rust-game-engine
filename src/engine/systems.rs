@@ -1,9 +1,7 @@
-
 use specs::{Read, ReadStorage, WriteStorage, System};
 
 use engine::components::*;
 use engine::resources::*;
-use glm::Quat;
 
 // systems
 pub struct UpdatePosition;
@@ -35,7 +33,7 @@ impl<'a> System<'a> for UpdateRotation {
         let delta = delta.0;
 
         for (pos, vel) in (&mut pos, &vel).join() {
-            pos.rotation *= vel.get_quat(delta);
+            pos.rotation = pos.rotation * vel.get_quat(delta);
         }
     }
 }

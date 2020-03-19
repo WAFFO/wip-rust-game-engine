@@ -1,3 +1,5 @@
+use engine::FS;
+
 // resources
 #[derive(Default)]
-pub struct DeltaTime(pub f32);
+pub struct DeltaTime(pub FS);
