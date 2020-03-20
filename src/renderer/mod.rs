@@ -3,7 +3,8 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use web_sys::{HtmlCanvasElement, WebGlBuffer, WebGl2RenderingContext, WebGlVertexArrayObject};
 use specs::{World, Join};
-//use glm;
+use glm::{Vec3, Vec4, Mat4};
+use glm;
 
 mod shader;
 
@@ -11,8 +12,6 @@ use self::shader::Shader;
 use engine::components;
 use engine::components::{Transform, StaticMesh, Solid, Light};
 use engine::mesh_manager::MeshManager;
-use glm::{Vec3, Vec4, Mat4};
-use glm;
 use javascript::get_canvas;
 
 pub struct Renderer {
@@ -117,16 +116,16 @@ impl Renderer {
         // basic_shader
         self.shader.use_shader(&self.context);
         self.shader.set_mat4(&self.context,"u_projection", &mut proj);
-        self.shader.set_vec3_xyz(&self.context,"u_view_pos", view_pos.x(), view_pos.y(), view_pos.z());
-        self.shader.set_vec3_xyz(&self.context,"u_view_target", view_target.x(), view_target.y(), view_target.z());
+        self.shader.set_vec3_xyz(&self.context,"u_view_pos", view_pos.x, view_pos.y, view_pos.z);
+        self.shader.set_vec3_xyz(&self.context,"u_view_target", view_target.x, view_target.y, view_target.z);
 
         self.draw_solids(world, mesh_manager);
 
         // ls_shader
         self.ls_shader.use_shader(&self.context);
         self.ls_shader.set_mat4(&self.context,"u_projection", &mut proj);
-        self.ls_shader.set_vec3_xyz(&self.context,"u_view_pos", view_pos.x(), view_pos.y(), view_pos.z());
-        self.ls_shader.set_vec3_xyz(&self.context,"u_view_target", view_target.x(), view_target.y(), view_target.z());
+        self.ls_shader.set_vec3_xyz(&self.context,"u_view_pos", view_pos.x, view_pos.y, view_pos.z);
+        self.ls_shader.set_vec3_xyz(&self.context,"u_view_target", view_target.x, view_target.y, view_target.z);
 
         self.draw_lights(world, mesh_manager);
 
@@ -222,7 +221,7 @@ impl Renderer {
     }
 
     fn build_projection(width: f32, height: f32) -> Mat4 {
-        glm::perspective( width/height, 75.0, 0.1, 200.0)
+        glm::perspective( width/height, 1.309, 0.1, 200.0)
     }
 
     //                          position, target
@@ -232,8 +231,8 @@ impl Renderer {
         let _pc_storage = world.read_storage::<components::PlayerController>();
 
         let mut result = (
-            Vec3::new(0.0, 0.0, 0.0),
-            Vec3::new(0.0, 0.0, 0.0),
+            glm::vec3(0.0, 0.0, 0.0),
+            glm::vec3(0.0, 0.0, 0.0),
         );
 
         // TODO, avoid using a loop? .get() .get_unchecked()
@@ -269,8 +268,8 @@ impl Renderer {
 
         if !lights.is_empty() {
             let (pos, color) = lights.get(0).unwrap();
-            self.shader.set_vec3_xyz(&self.context, "u_light_pos",pos[0], pos[1], pos[2]);
-            self.shader.set_vec3_xyz(&self.context, "u_light_color", color.x(), color.y(), color.z());
+            self.shader.set_vec3_xyz(&self.context, "u_light_pos",pos.x, pos.y, pos.z);
+            self.shader.set_vec3_xyz(&self.context, "u_light_color", color.x, color.y, color.z);
         }
 
         let _transform_storage = world.read_storage::<Transform>();

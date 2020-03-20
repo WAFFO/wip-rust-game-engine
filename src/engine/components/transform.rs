@@ -1,5 +1,6 @@
-use glm::{Vec3, Mat4, Quat, translate, rotate, scale};
 use specs::{VecStorage, Component};
+use glm;
+use glm::{Vec3, Mat4, Quat, translation, quat_cast, scaling};
 
 pub struct Transform {
     pub position: Vec3,
@@ -14,21 +15,21 @@ impl Component for Transform {
 impl Default for Transform {
     fn default() -> Transform {
         Transform {
-            position: Vec3::new(0.0, 0.0, 0.0),
-            rotation: Quat::new(1.0, 0.0, 0.0, 0.0),
-            scale: Vec3::new(0.0, 0.0, 0.0),
+            position: glm::vec3(0.0, 0.0, 0.0),
+            rotation: glm::quat(1.0, 0.0, 0.0, 0.0),
+            scale: glm::vec3(0.0, 0.0, 0.0),
         }
     }
 }
 
 impl Transform {
     pub fn model(&self) -> Mat4 {
-        translate(self.position)
-            * rotate(self.rotation)
-            * scale(self.scale)
+        translation(&self.position)
+            * quat_cast(&self.rotation)
+            * scaling(&self.scale)
     }
 
-    pub fn rotate(&mut self, rotation: Quat) {
-        self.rotation = self.rotation * rotation;
+    pub fn rotate(&mut self, rotation: &Quat) {
+        self.rotation = &self.rotation * rotation;
     }
 }

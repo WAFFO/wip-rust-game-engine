@@ -1,5 +1,6 @@
-use specs::{Component, VecStorage};
+use glm;
 use glm::Vec4;
+use specs::{Component, VecStorage};
 
 use engine::mesh_manager::UUID;
 
@@ -44,7 +45,7 @@ impl Component for Light {
 impl Default for Light {
     fn default() -> Light {
         Light {
-            color: Vec4::new(1.0, 1.0, 1.0, 1.0),
+            color: glm::vec4(1.0, 1.0, 1.0, 1.0),
         }
     }
 }

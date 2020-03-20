@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use web_sys::{WebGlProgram, WebGl2RenderingContext, WebGlShader, WebGlUniformLocation};
+use glm;
 use glm::{Vec3, Vec4, Mat3, Mat4};
 
 pub struct Shader {
@@ -111,7 +112,7 @@ impl Shader {
     pub fn set_vec3(&mut self, context: &WebGl2RenderingContext, name: &'static str, value: &mut Vec3) {
         context.uniform3fv_with_f32_array(
             Some(&self.get_uniform_location(&context, name)),
-            value.data_ref_mut(),
+            glm::value_ptr_mut(value),
         );
     }
     pub fn set_vec3_xyz(&mut self, context: &WebGl2RenderingContext, name: &'static str, x: f32, y: f32, z: f32) {
@@ -121,7 +122,7 @@ impl Shader {
     pub fn set_vec4(&mut self, context: &WebGl2RenderingContext, name: &'static str, value: &mut Vec4) {
         context.uniform4fv_with_f32_array(
             Some(&self.get_uniform_location(&context, name)),
-            value.data_ref_mut(),
+            glm::value_ptr_mut(value),
         );
     }
     pub fn set_vec4_xyzw(&mut self, context: &WebGl2RenderingContext, name: &'static str, x: f32, y: f32, z: f32, w: f32) {
@@ -140,7 +141,7 @@ impl Shader {
         context.uniform_matrix3fv_with_f32_array(
             Some(&self.get_uniform_location(&context, name)),
             false,
-            mat.data_ref_mut(),
+            glm::value_ptr_mut(mat),
         );
     }
 
@@ -148,7 +149,7 @@ impl Shader {
         context.uniform_matrix4fv_with_f32_array(
             Some(&self.get_uniform_location(&context, name)),
             false,
-            mat.data_ref_mut(),
+            glm::value_ptr_mut(mat),
         );
     }
 

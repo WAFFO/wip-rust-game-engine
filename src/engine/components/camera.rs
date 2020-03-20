@@ -1,7 +1,8 @@
 use std::f32::consts::PI;
 use specs::{Component,VecStorage};
+use {glm, glm::{Vec3, Quat}};
 
-use ::glm::{Vec3, FSize};
+use engine::FSize;
 
 pub struct Camera {
     pub rotation: Vec3,
@@ -28,7 +29,7 @@ impl Camera {
         self.rotation.normalize()
     }
     pub fn right(&self) -> Vec3 {
-        self.rotation.cross(&Vec3::new(0.0, 1.0, 0.0)).normalize()
+        self.rotation.cross(&glm::vec3(0.0, 1.0, 0.0)).normalize()
     }
     pub fn add_pitch(&mut self, pitch: FSize) {
         self.pitch += pitch;
@@ -64,8 +65,8 @@ impl Component for Camera {
 impl Default for Camera {
     fn default() -> Camera {
         Camera {
-            rotation: Vec3::new(0.0, 0.0, 0.0),
-            // target: Vec3::new(0.0, 0.0, 0.0),
+            rotation: glm::vec3(0.0, 0.0, 0.0),
+            // target: glm::vec3(0.0, 0.0, 0.0),
             pitch: 0.0,
             yaw: 0.0,
             pole_arm: 0.1,

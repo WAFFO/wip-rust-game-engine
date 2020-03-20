@@ -28,6 +28,9 @@ pub struct Engine {
     mesh_manager: MeshManager,
 }
 
+// floating point size
+pub type FSize = f32;
+
 impl Engine {
     pub fn new(canvas : String) -> Result<Engine, JsValue> {
 
