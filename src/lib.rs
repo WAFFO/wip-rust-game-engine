@@ -6,6 +6,8 @@ extern crate specs;
 
 use wasm_bindgen::prelude::*;
 
+extern crate homebrew_glm as glm;
+
 // Testing (tests.rs)
 #[cfg(test)]
 mod tests;
@@ -17,7 +19,6 @@ pub mod game;
 pub mod renderer;
 pub mod timer;
 pub mod javascript;
-pub mod glm;
 
 // bring to the surface
 //pub use application::Application;

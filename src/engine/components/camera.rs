@@ -1,14 +1,14 @@
 use std::f32::consts::PI;
 use specs::{Component,VecStorage};
 
-use ::glm::{Vec3, FSize};
+use glm::Vec3;
 
 pub struct Camera {
     pub rotation: Vec3,
     // pub target: Vec3,
-    pub pitch: FSize,
-    pub yaw: FSize,
-    pub pole_arm: FSize,
+    pub pitch: f32,
+    pub yaw: f32,
+    pub pole_arm: f32,
 }
 
 //   side view    |    top view
@@ -28,9 +28,9 @@ impl Camera {
         self.rotation.normalize()
     }
     pub fn right(&self) -> Vec3 {
-        self.rotation.cross(&Vec3::new(0.0, 1.0, 0.0)).normalize()
+        self.rotation.cross(Vec3::new(0.0, 1.0, 0.0)).normalize()
     }
-    pub fn add_pitch(&mut self, pitch: FSize) {
+    pub fn add_pitch(&mut self, pitch: f32) {
         self.pitch += pitch;
 
         if self.pitch > PI / 2.0 - 0.1 {
@@ -41,12 +41,12 @@ impl Camera {
 
         self.update();
     }
-    pub fn add_yaw(&mut self, yaw: FSize) {
+    pub fn add_yaw(&mut self, yaw: f32) {
         self.yaw -= yaw;
 
         self.update();
     }
-    pub fn add_pole_arm(&mut self, len: FSize) {
+    pub fn add_pole_arm(&mut self, len: f32) {
         self.pole_arm += len;
 
         if self.pole_arm < 0.1 {

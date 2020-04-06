@@ -1,5 +1,5 @@
 
-use goblin::glm::quat::{Vec3, Quat, Mat4};
+use glm::quat::{Vec3, Quat, Mat4};
 
 /*
  *

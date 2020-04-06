@@ -25,3 +25,6 @@ features = [
   'Window',
   'Performance',
 ]
+
+[dependencies.homebrew-glm]
+path = "../../homebrew-glm"

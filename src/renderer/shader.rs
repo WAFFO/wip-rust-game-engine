@@ -101,7 +101,7 @@ impl Shader {
 //    pub fn set_vec2(&mut self, context: &WebGl2RenderingContext, name: &'static str, value: &mut glm::Vec2) {
 //        context.uniform2fv_with_f32_array(
 //            Some(&self.get_uniform_location(&context, name)),
-//            value.data_ref_mut()),
+//            value.as_mut()),
 //        );
 //    }
 //    pub fn set_vec2_xy(&mut self, context: &WebGl2RenderingContext, name: &'static str, x: f32, y: f32) {
@@ -111,7 +111,7 @@ impl Shader {
     pub fn set_vec3(&mut self, context: &WebGl2RenderingContext, name: &'static str, value: &mut Vec3) {
         context.uniform3fv_with_f32_array(
             Some(&self.get_uniform_location(&context, name)),
-            value.data_ref_mut(),
+            value.as_mut(),
         );
     }
     pub fn set_vec3_xyz(&mut self, context: &WebGl2RenderingContext, name: &'static str, x: f32, y: f32, z: f32) {
@@ -121,7 +121,7 @@ impl Shader {
     pub fn set_vec4(&mut self, context: &WebGl2RenderingContext, name: &'static str, value: &mut Vec4) {
         context.uniform4fv_with_f32_array(
             Some(&self.get_uniform_location(&context, name)),
-            value.data_ref_mut(),
+            value.as_mut(),
         );
     }
     pub fn set_vec4_xyzw(&mut self, context: &WebGl2RenderingContext, name: &'static str, x: f32, y: f32, z: f32, w: f32) {
@@ -132,7 +132,7 @@ impl Shader {
 //        context.uniform_matrix2fv_with_f32_array(
 //            Some(&self.get_uniform_location(&context, name)),
 //            false,
-//            mat.data_ref_mut(),
+//            mat.as_mut(),
 //        );
 //    }
 
@@ -140,7 +140,7 @@ impl Shader {
         context.uniform_matrix3fv_with_f32_array(
             Some(&self.get_uniform_location(&context, name)),
             false,
-            mat.data_ref_mut(),
+            mat.as_mut(),
         );
     }
 
@@ -148,7 +148,7 @@ impl Shader {
         context.uniform_matrix4fv_with_f32_array(
             Some(&self.get_uniform_location(&context, name)),
             false,
-            mat.data_ref_mut(),
+            mat.as_mut(),
         );
     }
 

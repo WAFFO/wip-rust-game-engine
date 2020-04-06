@@ -1,10 +1,10 @@
 
 use specs::{Component, VecStorage};
-use glm::{Vec3, Quat, FSize};
+use glm::{Vec3, Quat};
 
 pub struct AngularVelocity {
     pub axis: Vec3,
-    pub angle: FSize,
+    pub angle: f32,
 }
 
 impl Component for AngularVelocity {
@@ -21,10 +21,10 @@ impl Default for AngularVelocity {
 }
 
 impl AngularVelocity {
-    pub fn get_quat(&self, delta: FSize) -> Quat {
-        Quat::from_euler_angle(
-            self.axis,
+    pub fn get_quat(&self, delta: f32) -> Quat {
+        Quat::from_angle_axis(
             self.angle * delta,
+            self.axis,
         )
     }
 }
