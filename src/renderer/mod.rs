@@ -222,7 +222,7 @@ impl Renderer {
     }
 
     fn build_projection(width: f32, height: f32) -> Mat4 {
-        glm::perspective(75.0f32.to_radians(), width/height, 0.1, 200.0)
+        glm::perspective_infinite(75.0f32.to_radians(), width/height, 0.1)
     }
 
     //                          position, target
