@@ -1,7 +1,7 @@
 [package]
 name = "goblin"
-version = "0.1.1"
-authors = ["team goblin"]
+version = "0.1.2"
+authors = ["Garrett Steffen <garrettsteffen@gmail.com>"]
 
 [dependencies]
 js-sys = "0.3.24"

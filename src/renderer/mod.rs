@@ -3,7 +3,6 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use web_sys::{HtmlCanvasElement, WebGlBuffer, WebGl2RenderingContext, WebGlVertexArrayObject};
 use specs::{World, Join};
-//use glm;
 
 mod shader;
 
@@ -26,7 +25,7 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    pub fn new(canvas_id : String) -> Result<(Renderer), JsValue> {
+    pub fn new(canvas_id : String) -> Result<Renderer, JsValue> {
         // Gather our canvas from the DOM
         let canvas: HtmlCanvasElement = get_canvas(canvas_id)?;
 
@@ -225,7 +224,7 @@ impl Renderer {
         glm::perspective_infinite(75.0f32.to_radians(), width/height, 0.1)
     }
 
-    //                          position, target
+    //                         position, target
     fn get_view(world: &World) -> (Vec3, Vec3) {
         let _transform_storage = world.read_storage::<components::Transform>();
         let _camera_storage = world.read_storage::<components::Camera>();
@@ -238,7 +237,7 @@ impl Renderer {
 
         // TODO, avoid using a loop? .get() .get_unchecked()
         for (transform, camera, _) in (&_transform_storage, &_camera_storage, &_pc_storage).join() {
-            result = (transform.position+camera.rotation,transform.position);
+            result = (transform.position + camera.rotation, transform.position);
         }
 
 //        crate::javascript::log_3("CAMERA POS: {}, {}, {}",

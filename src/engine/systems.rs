@@ -1,9 +1,7 @@
-
 use specs::{Read, ReadStorage, WriteStorage, System};
 
 use engine::components::*;
 use engine::resources::*;
-use glm::Quat;
 
 // systems
 pub struct UpdatePosition;

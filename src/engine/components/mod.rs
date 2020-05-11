@@ -38,9 +38,11 @@ impl Component for Solid {
 pub struct Light{
     pub color: Vec4,
 }
+
 impl Component for Light {
     type Storage = VecStorage<Self>;
 }
+
 impl Default for Light {
     fn default() -> Light {
         Light {

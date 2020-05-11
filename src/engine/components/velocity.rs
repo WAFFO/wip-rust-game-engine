@@ -1,6 +1,6 @@
 
 use specs::{Component, VecStorage};
-use glm::{Vec3, Quat};
+use glm::Vec3;
 
 pub struct Velocity {
     pub position: Vec3,

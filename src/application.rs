@@ -1,8 +1,3 @@
-//use wasm_bindgen;
-//use wasm_bindgen::JsValue;
-//
-use engine::Engine;
-use game::Game;
 
 
 #[macro_export]
