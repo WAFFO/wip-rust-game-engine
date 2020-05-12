@@ -26,5 +26,5 @@ features = [
   'Performance',
 ]
 
-[dependencies.homebrew-glm]
-path = "../../homebrew-glm"
+[dependencies.sawd-glm]
+path = "../../sawd-glm"

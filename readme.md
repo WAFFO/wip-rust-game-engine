@@ -2,12 +2,6 @@
 
 Name pending.
 
-## BRANCH: homebrew_glm
-
-This branch requires you also download my other project: [homebrew_glm](https://github.com/WAFFO/homebrew-glm/)
-
-Update the Cargo.toml file with the path that best suits you.
-
 ### Purpose
 
 Game Engine will house components and systems that every game needs. Game Engine contains WebGL rendering with GLM functionality.
@@ -19,6 +13,12 @@ Game Engine will house components and systems that every game needs. Game Engine
 - Mesh management
 - ECS management
 - Javascript app, log, and input hooks
+
+## sawd_glm
+
+This project requires you also download my other project: [sawd_glm](https://github.com/WAFFO/sawd-glm/)
+
+Update the `Cargo.toml` file with the path that best suits you.
 
 ## How to Include
 
