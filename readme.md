@@ -1,8 +1,6 @@
-# Goblin Engine
+# Rust Based Game Engine
 
-Name pending.
-
-### Purpose
+### Goal
 
 Game Engine will house components and systems that every game needs. Game Engine contains WebGL rendering with GLM functionality.
 
