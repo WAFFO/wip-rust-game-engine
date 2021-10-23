@@ -23,14 +23,14 @@ Update the `Cargo.toml` file with the path that best suits you.
 Pull this repo and reference it locally through your cargo.toml
 
 ```toml
-[dependencies.goblin]
-path = "../goblin-engine"
+[dependencies.gameengine]
+path = "../wip-rust-game-engine"
 ```
 
 Then in your `lib.rs` you can reference it by the name given above
 
 ```rust
-extern crate goblin;
+extern crate gameengine;
 ```
 
 Below that create your application with the built in macro
